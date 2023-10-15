@@ -1,4 +1,5 @@
 from django.contrib.auth import get_user_model
+from django.core.validators import RegexValidator
 from django.db import models
 
 User = get_user_model()
@@ -42,13 +43,18 @@ class Donation(models.Model):
     """
     Represents a donation.
     """
+    phone_regex = RegexValidator(regex=r'^\+?1?\d{9,15}$',
+                                 message="Numer telefonu musi zawierać od 9 do 15 cyfr.")
+    zipcode_regex = RegexValidator(regex=r'^(\d{2}(?:[-]\d{3})|\d{5})$',
+                                 message="Kod pocztowy musi być podany w formacie 12345 lub 12-345")
+
     quantity = models.PositiveIntegerField()
     categories = models.ManyToManyField(Category)
     institution = models.ForeignKey(Institution, on_delete=models.CASCADE)
     address = models.CharField(max_length=255)
-    phone_number = models.CharField(max_length=15)
+    phone_number = models.CharField(max_length=15, validators=[phone_regex])
     city = models.CharField(max_length=64)
-    zip_code = models.CharField(max_length=6)
+    zip_code = models.CharField(max_length=6, validators=[zipcode_regex])
     pick_up_date = models.DateField()
     pick_up_time = models.TimeField()
     pick_up_comment = models.TextField()
