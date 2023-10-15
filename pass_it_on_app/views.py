@@ -14,13 +14,20 @@ class IndexView(View):
         institutions_supported = []
         for donation in Donation.objects.all():
             bags_given_count += donation.quantity
-
+            # TODO possible refactor
             if donation.institution.id not in institutions_supported:
                 institutions_supported.append(donation.institution.id)
 
+        foundations = Institution.objects.filter(type=1).order_by("name")
+        non_gov_organizations = Institution.objects.filter(type=2).order_by("name")
+        local_collections = Institution.objects.filter(type=3).order_by("name")
+
         ctx = {
             "institutions_supported": len(institutions_supported),
-            "bags_given": bags_given_count
+            "bags_given": bags_given_count,
+            "foundations": foundations,
+            "non_gov_organizations": non_gov_organizations,
+            "local_collections": local_collections,
         }
         return render(request, 'index.html', ctx)
 
