@@ -1,6 +1,11 @@
 {% extends '__base__.html' %}
 {% block content %}
-
+<!-- //--------------------------- header -------------------------// -->
+<header>
+    {% include 'navbar.html' %}
+    {% block navbar %}{% endblock navbar %}
+</header>
+<!-- //--------------------------- header end ---------------------// -->
     <section class="login-page">
       <h2>Załóż konto</h2>
       <form>
