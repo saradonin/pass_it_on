@@ -55,7 +55,7 @@ ROOT_URLCONF = 'pass_it_on.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [BASE_DIR / 'templates']
+        'DIRS': [BASE_DIR / 'pass_it_on_app/templates']
         ,
         'APP_DIRS': True,
         'OPTIONS': {
