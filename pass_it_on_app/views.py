@@ -1,7 +1,7 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.views import View
 
-from pass_it_on_app.models import Institution, Donation
+from pass_it_on_app.models import Institution, Donation, User
 
 
 class IndexView(View):
@@ -32,7 +32,7 @@ class IndexView(View):
         return render(request, 'index.html', ctx)
 
 
-class LoginView(View):
+class UserLoginView(View):
     """
     View for rendering the login page.
     """
@@ -41,13 +41,46 @@ class LoginView(View):
         return render(request, 'login.html')
 
 
-class RegisterView(View):
+class UserAddView(View):
     """
     View for rendering the register page.
     """
 
     def get(self, request):
         return render(request, 'register.html')
+
+    def post(self, request):
+        name = request.POST.get('name')
+        surname = request.POST.get('surname')
+        email = request.POST.get('email')
+        password = request.POST.get('password')
+        password2 = request.POST.get('password2')
+        # validation
+        ctx = {}
+        if not name:
+            ctx["name_msg"] = "Podaj imię"
+        if not surname:
+            ctx["surname_msg"] = "Podaj nazwisko"
+        if not email:
+            ctx["email_msg"] = "Podaj email"
+        if not password:
+            ctx["password_msg"] = "Podaj hasło"
+        elif len(password) < 8:
+            ctx["password_msg"] = "Hasło musi zaiwerać co najmniej 8 znaków"
+        if not password2 or password != password2:
+            ctx["password2_msg"] = "Hasła muszą być takie same"
+
+        if name and surname and email and password and password2:
+            User.objects.create_user(
+                username=email,
+                first_name=name,
+                last_name=surname,
+                email=email,
+                password=password
+            )
+            return redirect('login')
+
+        return render(request, 'register.html', ctx)
 
 
 class DonationAddView(View):

@@ -17,12 +17,12 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 
-from pass_it_on_app.views import IndexView, LoginView, RegisterView, DonationAddView
+from pass_it_on_app.views import IndexView, UserLoginView, UserAddView, DonationAddView
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', IndexView.as_view(), name="index"),
-    path('login/', LoginView.as_view(), name="login"),
-    path('register/', RegisterView.as_view(), name="register"),
+    path('login/', UserLoginView.as_view(), name="login"),
+    path('register/', UserAddView.as_view(), name="register"),
     path('donate/', DonationAddView.as_view(), name="donation-add"),
 ]
