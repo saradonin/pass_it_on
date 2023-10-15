@@ -1,6 +1,8 @@
 from django.shortcuts import render
 from django.views import View
 
+from pass_it_on_app.models import Institution, Donation
+
 
 class IndexView(View):
     """
@@ -8,7 +10,19 @@ class IndexView(View):
     """
 
     def get(self, request):
-        return render(request, 'index.html')
+        bags_given_count = 0
+        institutions_supported = []
+        for donation in Donation.objects.all():
+            bags_given_count += donation.quantity
+
+            if donation.institution.id not in institutions_supported:
+                institutions_supported.append(donation.institution.id)
+
+        ctx = {
+            "institutions_supported": len(institutions_supported),
+            "bags_given": bags_given_count
+        }
+        return render(request, 'index.html', ctx)
 
 
 class LoginView(View):
