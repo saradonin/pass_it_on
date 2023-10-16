@@ -1,3 +1,4 @@
+from django.contrib.auth import authenticate, login
 from django.shortcuts import render, redirect
 from django.views import View
 
@@ -34,16 +35,28 @@ class IndexView(View):
 
 class UserLoginView(View):
     """
-    View for rendering the login page.
+    View for user login.
     """
 
     def get(self, request):
         return render(request, 'login.html')
 
+    def post(self, request):
+        username = request.POST.get('email')
+        password = request.POST.get('password')
+
+        user = authenticate(username=username, password=password)
+
+        if user is not None:
+            login(request, user)
+            return redirect('index')
+        else:
+            return redirect('register')
+
 
 class UserAddView(View):
     """
-    View for rendering the register page.
+    View for registering new user.
     """
 
     def get(self, request):
