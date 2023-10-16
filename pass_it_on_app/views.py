@@ -1,4 +1,4 @@
-from django.contrib.auth import authenticate, login
+from django.contrib.auth import authenticate, login, logout
 from django.shortcuts import render, redirect
 from django.views import View
 
@@ -52,6 +52,16 @@ class UserLoginView(View):
             return redirect('index')
         else:
             return redirect('register')
+
+
+class UserLogoutView(View):
+    """
+    View for user logout.
+    """
+
+    def get(self, request):
+        logout(request)
+        return redirect('index')
 
 
 class UserAddView(View):
