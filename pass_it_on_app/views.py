@@ -2,7 +2,7 @@ from django.contrib.auth import authenticate, login, logout
 from django.shortcuts import render, redirect
 from django.views import View
 
-from pass_it_on_app.models import Institution, Donation, User
+from pass_it_on_app.models import Institution, Donation, User, Category
 
 
 class IndexView(View):
@@ -112,4 +112,12 @@ class DonationAddView(View):
     """
 
     def get(self, request):
-        return render(request, 'form.html')
+        user = request.user
+        if user.is_authenticated:
+            ctx = {
+                'categories': Category.objects.all().order_by('name'),
+                'institutions': Institution.objects.all().order_by('name')
+            }
+            return render(request, 'form.html', ctx)
+        else:
+            return redirect('login')
