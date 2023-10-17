@@ -175,6 +175,9 @@ document.addEventListener("DOMContentLoaded", function () {
             this.$step = form.querySelector(".form--steps-counter span");
             this.currentStep = 1;
 
+            this.$categoryCheckboxes = form.querySelectorAll(".category-checkbox");
+            this.$allInstitutionsContainers = form.querySelectorAll(".institution-checkbox-container");
+
             this.$stepInstructions = form.querySelectorAll(".form--steps-instructions p");
             const $stepForms = form.querySelectorAll("form > div");
             this.slides = [...this.$stepInstructions, ...$stepForms];
@@ -212,6 +215,13 @@ document.addEventListener("DOMContentLoaded", function () {
                 });
             });
 
+            // Category checkboxes change event
+            this.$categoryCheckboxes.forEach(checkbox => {
+                checkbox.addEventListener('click', e => {
+                    this.updateForm(); // Trigger form update when categories change
+                });
+            });
+
             // Form submit
             this.$form.querySelector("form").addEventListener("submit", e => this.submit(e));
         }
@@ -235,6 +245,23 @@ document.addEventListener("DOMContentLoaded", function () {
 
             this.$stepInstructions[0].parentElement.parentElement.hidden = this.currentStep >= 6;
             this.$step.parentElement.hidden = this.currentStep >= 6;
+
+
+            // Filter institutions based on selected categories
+            const selectedCategories = Array.from(this.$categoryCheckboxes)
+                .filter(checkbox => checkbox.checked)
+                .map(checkbox => checkbox.value);
+
+            this.$allInstitutionsContainers.forEach(institutionContainer => {
+                const institutionCategories = institutionContainer.dataset.categoryIds.split(',').map(category => parseInt(category.trim()));
+
+                if (selectedCategories.every(category => institutionCategories.includes(parseInt(category)))) {
+                    institutionContainer.style.display = "block";  // Show the institution
+                } else {
+                    institutionContainer.style.display = "none";   // Hide the institution
+                }
+            });
+
 
             // TODO: get data from inputs and show them in summary
         }
