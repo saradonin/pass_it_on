@@ -115,11 +115,13 @@
                                     <div class="subtitle">{{ institution.description }}</div>
 
 {#                                TODO remove or hide div after testing#}
+{#                                    ====================================#}
                                     <div class="subtitle">
                                     {% for category in institution.categories.all %}
                                         <li>{{ category.id }}. {{ category.name }}</li>
                                     {% endfor %}
                                     </div>
+{#                                ===============================================#}
 
                                 </span>
                             </label>
@@ -194,16 +196,16 @@
                             <ul>
                                 <li>
                                     <span class="icon icon-bag"></span>
-                                    <span class="summary--text"
-                                    >4 worki ubrań w dobrym stanie dla dzieci</span
-                                    >
+                                    <span id="summary-bags" class="summary--text">
+                                        4 worki ubrań w dobrym stanie dla dzieci
+                                    </span>
                                 </li>
 
                                 <li>
                                     <span class="icon icon-hand"></span>
-                                    <span class="summary--text"
-                                    >Dla fundacji "Mam marzenie" w Warszawie</span
-                                    >
+                                    <span id="summary-institution" class="summary--text">
+                                        Dla fundacji "Mam marzenie" w Warszawie
+                                    </span>
                                 </li>
                             </ul>
                         </div>
@@ -212,19 +214,19 @@
                             <div class="form-section--column">
                                 <h4>Adres odbioru:</h4>
                                 <ul>
-                                    <li>Prosta 51</li>
-                                    <li>Warszawa</li>
-                                    <li>99-098</li>
-                                    <li>123 456 789</li>
+                                    <li id="summary-street">Prosta 51</li>
+                                    <li id="summary-city">Warszawa</li>
+                                    <li id="summary-postcode">99-098</li>
+                                    <li id="summary-phone">123 456 789</li>
                                 </ul>
                             </div>
 
                             <div class="form-section--column">
                                 <h4>Termin odbioru:</h4>
                                 <ul>
-                                    <li>13/12/2018</li>
-                                    <li>15:40</li>
-                                    <li>Brak uwag</li>
+                                    <li id="summary-date">13/12/2018</li>
+                                    <li id="summary-time">15:40</li>
+                                    <li id="summary-info">Brak uwag</li>
                                 </ul>
                             </div>
                         </div>

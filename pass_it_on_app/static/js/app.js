@@ -175,8 +175,32 @@ document.addEventListener("DOMContentLoaded", function () {
             this.$step = form.querySelector(".form--steps-counter span");
             this.currentStep = 1;
 
+            // items for filter
             this.$categoryCheckboxes = form.querySelectorAll(".category-checkbox");
             this.$allInstitutionsContainers = form.querySelectorAll(".institution-checkbox-container");
+
+            // items from form
+
+            this.$pickupQuantity = form.querySelector('[name="bags"]')
+            this.$institutions = form.querySelector('[name="organization"]')
+
+            this.$pickupStreet = form.querySelector('[name="address"]')
+            this.$pickupCity = form.querySelector('[name="city"]')
+            this.$pickupPostcode = form.querySelector('[name="postcode"]')
+            this.$pickupPhone = form.querySelector('[name="phone"]')
+            this.$pickupDate = form.querySelector('[name="data"]')
+            this.$pickupTime = form.querySelector('[name="time"]')
+            this.$pickupInfo = form.querySelector('[name="more_info"]')
+
+            // summary items
+            this.$summaryQuantity = form.querySelector("#summary-bags")
+            this.$summaryStreet = form.querySelector("#summary-street")
+            this.$summaryCity = form.querySelector("#summary-city")
+            this.$summaryPostcode = form.querySelector("#summary-postcode")
+            this.$summaryPhone = form.querySelector("#summary-phone")
+            this.$summaryDate = form.querySelector("#summary-date")
+            this.$summaryTime = form.querySelector("#summary-time")
+            this.$summaryInfo = form.querySelector("#summary-info")
 
             this.$stepInstructions = form.querySelectorAll(".form--steps-instructions p");
             const $stepForms = form.querySelectorAll("form > div");
@@ -217,7 +241,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
             // Category checkboxes change event
             this.$categoryCheckboxes.forEach(checkbox => {
-                checkbox.addEventListener('click', e => {
+                checkbox.addEventListener('click', () => {
                     this.updateForm(); // Trigger form update when categories change
                 });
             });
@@ -261,6 +285,16 @@ document.addEventListener("DOMContentLoaded", function () {
                     institutionContainer.style.display = "none";   // Hide the institution
                 }
             });
+
+            // Summary display
+            this.$summaryQuantity.innerText = this.$pickupQuantity.value + " worki"
+            this.$summaryStreet.innerText = this.$pickupStreet.value
+            this.$summaryCity.innerText = this.$pickupCity.value
+            this.$summaryPostcode.innerText = this.$pickupPostcode.value
+            this.$summaryPhone.innerText = this.$pickupPhone.value
+            this.$summaryDate.innerText = this.$pickupDate.value
+            this.$summaryTime.innerText = "godz. " + this.$pickupTime.value
+            this.$summaryInfo.innerText = this.$pickupInfo.value
 
 
             // TODO: get data from inputs and show them in summary
