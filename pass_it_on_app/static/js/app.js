@@ -208,6 +208,7 @@ document.addEventListener("DOMContentLoaded", function () {
             this.$errorMessage1 = form.querySelector("#error-message-1")
             this.$errorMessage2 = form.querySelector("#error-message-2")
             this.$errorMessage3 = form.querySelector("#error-message-3")
+            this.$errorMessage4 = form.querySelector("#error-message-4")
 
             this.$stepInstructions = form.querySelectorAll(".form--steps-instructions p");
             const $stepForms = form.querySelectorAll("form > div");
@@ -228,7 +229,7 @@ document.addEventListener("DOMContentLoaded", function () {
          * All events that are happening in form
          */
         events() {
-            // Next step
+            // // Next step
             // this.$next.forEach(btn => {
             //     btn.addEventListener("click", e => {
             //         e.preventDefault();
@@ -236,15 +237,24 @@ document.addEventListener("DOMContentLoaded", function () {
             //         this.updateForm();
             //     });
             // });
+            let isButtonDisabled = false;
 
+            // Next step
             this.$next.forEach(btn => {
                 btn.addEventListener("click", async e => {
                     e.preventDefault();
+
+                    if (isButtonDisabled) return;
+                    isButtonDisabled = true;
+
                     const isValid = this.validateStep(this.currentStep - 1);
                     if (isValid) {
                         this.currentStep++;
                         this.updateForm();
                     }
+
+                    // Re-enable the button after validation is complete
+                    isButtonDisabled = false;
                 });
             });
 
@@ -278,6 +288,7 @@ document.addEventListener("DOMContentLoaded", function () {
             this.$errorMessage1.textContent
                 = this.$errorMessage2.textContent
                 = this.$errorMessage3.textContent
+                = this.$errorMessage4.textContent
                 = '';
 
 
@@ -369,10 +380,33 @@ document.addEventListener("DOMContentLoaded", function () {
                     }
                     return true;
                 case 4:
-
-
-
-                // Add more cases for other steps if needed
+                    if (this.$pickupStreet.value === "") {
+                        this.$errorMessage4.textContent = "Podaj nazwę ulicy";
+                        return false;
+                    }
+                    if (this.$pickupCity.value === "") {
+                        this.$errorMessage4.textContent = "Podaj nazwę miasta";
+                        return false;
+                    }
+                    if (this.$pickupPostcode.value === "") {
+                        this.$errorMessage4.textContent = "Podaj poprawny kod pocztowy";
+                        return false;
+                    }
+                    if (this.$pickupPhone.value === "" ||
+                        this.$pickupPhone.value.length > 15 ||
+                        this.$pickupPhone.value.length < 9) {
+                        this.$errorMessage4.textContent = "Podaj numer telefonu";
+                        return false;
+                    }
+                    if (this.$pickupDate.value === "") {
+                        this.$errorMessage4.textContent = "Podaj datę odbioru";
+                        return false;
+                    }
+                    if (this.$pickupTime.value === "") {
+                        this.$errorMessage4.textContent = "Podaj godzinę";
+                        return false;
+                    }
+                    return true;
 
                 default:
                     return true; // No validation for other steps by default
@@ -386,8 +420,8 @@ document.addEventListener("DOMContentLoaded", function () {
          */
         submit(e) {
             e.preventDefault();
-            this.currentStep++;
-            this.updateForm();
+            const formElement = this.$form.querySelector("form");
+            formElement.submit();
         }
     }
 

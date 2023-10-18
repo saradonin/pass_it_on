@@ -123,25 +123,29 @@ class DonationAddView(View):
             return redirect('login')
 
     def post(self, request):
+        # TODO fix submission
         user = request.user
         quantity = request.POST.get("bags")
-        categories = request.POST.get("summary-bags") # kilka i tylko checked
-        institution = request.POST.get("summary-institution")  # tylko checker
+        categories = request.POST.get("summary-bags")
+
+        institution_name = request.POST.get("summary-institution")
+        institution = Institution.objects.get(name=institution_name)
+
         address = request.POST.get("address")
         phone_number = request.POST.get("phone")
         city = request.POST.get("city")
-        zip_code = request.POST.get("postdoce")
+        zip_code = request.POST.get("postcode")
         pick_up_date = request.POST.get("summary-date")
         pick_up_time = request.POST.get("summary-time")
         pick_up_comment = request.POST.get("summary-date")
+
+        if quantity and categories and institution and address and phone_number and city and zip_code and pick_up_date and pick_up_time:
+            Donation.objects.create(user=user, quantity=int(quantity), address=address, city=city, zip_code=zip_code,
+                                    pick_up_date=pick_up_date, pick_up_time=pick_up_time,
+                                    pick_up_comment=pick_up_comment)
+            return render(request, 'form-confirmation.html')
         ctx = {
-            "error_message_1": "",
             'categories': Category.objects.all().order_by('name'),
             'institutions': Institution.objects.all().order_by('name')
         }
-        if not categories:
-            ctx["error_message_1"] = "Zaznacz co najmniej jedną kategorię"
-
         return render(request, 'form.html', ctx)
-
-
