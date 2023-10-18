@@ -121,3 +121,17 @@ class DonationAddView(View):
             return render(request, 'form.html', ctx)
         else:
             return redirect('login')
+
+    def post(self, request):
+        user = request.user
+        quantity = request.POST.get("bags")
+        categories = request.POST.get("summary-bags") # kilka i tylko checked
+        institution = request.POST.get("summary-institution")  # tylko checker
+        address = request.POST.get("address")
+        phone_number = request.POST.get("phone")
+        city = request.POST.get("city")
+        zip_code = request.POST.get("postdoce")
+        pick_up_date = request.POST.get("summary-date")
+        pick_up_time = request.POST.get("summary-time")
+        pick_up_comment = request.POST.get("summary-date")
+

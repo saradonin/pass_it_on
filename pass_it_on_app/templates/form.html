@@ -58,7 +58,7 @@
             <div class="form--steps-counter">Krok <span>1</span>/5</div>
 
             <form action="form-confirmation.html" method="post">
-
+                {% csrf_token %}
                 <!-- STEP 1: class .active is switching steps -->
                 <div data-step="1" class="active">
                     <h3>Zaznacz co chcesz oddać:</h3>
@@ -199,6 +199,10 @@
                                     <span id="summary-bags" class="summary--text">
                                         4 worki ubrań w dobrym stanie dla dzieci
                                     </span>
+                                    <span id="summary-categories" class="summary--text">
+                                        summary categories temporary text
+                                    </span>
+
                                 </li>
 
                                 <li>

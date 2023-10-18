@@ -194,6 +194,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
             // summary items
             this.$summaryQuantity = form.querySelector("#summary-bags")
+            this.$summaryCategories = form.querySelector("#summary-categories")
             this.$summaryInstitution = form.querySelector("#summary-institution")
             this.$summaryStreet = form.querySelector("#summary-street")
             this.$summaryCity = form.querySelector("#summary-city")
@@ -292,23 +293,22 @@ document.addEventListener("DOMContentLoaded", function () {
                 .filter(checkbox => checkbox.checked)
                 .map(checkbox => checkbox.dataset.categoryName);
 
-// TODO add categories names
-            this.$summaryQuantity.innerText = this.$pickupQuantity.value + " worki (" + selectedCategoriesNames + ")"
+            this.$summaryQuantity.innerHTML = this.$pickupQuantity.value + " worki" + "&nbsp;" // space
             let selectedInstitution = form.querySelector('[name="organization"]:checked')
             if (selectedInstitution) {
-                this.$summaryInstitution.innerText = selectedInstitution.value
+                this.$summaryInstitution.textContent = selectedInstitution.value
             }
-
-            this.$summaryStreet.innerText = this.$pickupStreet.value
-            this.$summaryCity.innerText = this.$pickupCity.value
-            this.$summaryPostcode.innerText = this.$pickupPostcode.value
-            this.$summaryPhone.innerText = this.$pickupPhone.value
-            this.$summaryDate.innerText = this.$pickupDate.value
-            this.$summaryTime.innerText = "godz. " + this.$pickupTime.value
+            this.$summaryCategories.textContent = "(" + selectedCategoriesNames + ")"
+            this.$summaryStreet.textContent = this.$pickupStreet.value
+            this.$summaryCity.textContent = this.$pickupCity.value
+            this.$summaryPostcode.textContent = this.$pickupPostcode.value
+            this.$summaryPhone.textContent = this.$pickupPhone.value
+            this.$summaryDate.textContent = this.$pickupDate.value
+            this.$summaryTime.textContent = "godz. " + this.$pickupTime.value
             if (this.$pickupInfo.value === ""){
-                this.$summaryInfo.innerText = "Brak uwag"
+                this.$summaryInfo.textContent = "Brak uwag"
             } else {
-                this.$summaryInfo.innerText = this.$pickupInfo.value
+                this.$summaryInfo.textContent = this.$pickupInfo.value
             }
 
 
