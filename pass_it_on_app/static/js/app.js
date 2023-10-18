@@ -182,7 +182,7 @@ document.addEventListener("DOMContentLoaded", function () {
             // items from form
 
             this.$pickupQuantity = form.querySelector('[name="bags"]')
-            this.$institutions = form.querySelector('[name="organization"]')
+            // this.$selectedInstitution = form.querySelector('[name="organization"]:checked')
 
             this.$pickupStreet = form.querySelector('[name="address"]')
             this.$pickupCity = form.querySelector('[name="city"]')
@@ -194,6 +194,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
             // summary items
             this.$summaryQuantity = form.querySelector("#summary-bags")
+            this.$summaryInstitution = form.querySelector("#summary-institution")
             this.$summaryStreet = form.querySelector("#summary-street")
             this.$summaryCity = form.querySelector("#summary-city")
             this.$summaryPostcode = form.querySelector("#summary-postcode")
@@ -287,7 +288,12 @@ document.addEventListener("DOMContentLoaded", function () {
             });
 
             // Summary display
-            this.$summaryQuantity.innerText = this.$pickupQuantity.value + " worki"
+            this.$summaryQuantity.innerText = this.$pickupQuantity.value + " worki" // add categories names
+            let selectedInstitution = form.querySelector('[name="organization"]:checked')
+            if (selectedInstitution) {
+                this.$summaryInstitution.innerText = selectedInstitution.value
+            }
+
             this.$summaryStreet.innerText = this.$pickupStreet.value
             this.$summaryCity.innerText = this.$pickupCity.value
             this.$summaryPostcode.innerText = this.$pickupPostcode.value
