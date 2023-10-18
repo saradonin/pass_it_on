@@ -305,7 +305,12 @@ document.addEventListener("DOMContentLoaded", function () {
             this.$summaryPhone.innerText = this.$pickupPhone.value
             this.$summaryDate.innerText = this.$pickupDate.value
             this.$summaryTime.innerText = "godz. " + this.$pickupTime.value
-            this.$summaryInfo.innerText = this.$pickupInfo.value
+            if (this.$pickupInfo.value === ""){
+                this.$summaryInfo.innerText = "Brak uwag"
+            } else {
+                this.$summaryInfo.innerText = this.$pickupInfo.value
+            }
+
 
         }
 
