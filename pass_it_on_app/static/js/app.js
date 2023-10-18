@@ -288,7 +288,12 @@ document.addEventListener("DOMContentLoaded", function () {
             });
 
             // Summary display
-            this.$summaryQuantity.innerText = this.$pickupQuantity.value + " worki" // add categories names
+            const selectedCategoriesNames = Array.from(this.$categoryCheckboxes)
+                .filter(checkbox => checkbox.checked)
+                .map(checkbox => checkbox.dataset.categoryName);
+
+// TODO add categories names
+            this.$summaryQuantity.innerText = this.$pickupQuantity.value + " worki (" + selectedCategoriesNames + ")"
             let selectedInstitution = form.querySelector('[name="organization"]:checked')
             if (selectedInstitution) {
                 this.$summaryInstitution.innerText = selectedInstitution.value
@@ -302,8 +307,6 @@ document.addEventListener("DOMContentLoaded", function () {
             this.$summaryTime.innerText = "godz. " + this.$pickupTime.value
             this.$summaryInfo.innerText = this.$pickupInfo.value
 
-
-            // TODO: get data from inputs and show them in summary
         }
 
         /**
