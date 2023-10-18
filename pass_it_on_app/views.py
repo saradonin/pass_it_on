@@ -125,25 +125,37 @@ class DonationAddView(View):
     def post(self, request):
         # TODO fix submission
         user = request.user
-        quantity = request.POST.get("bags")
-        categories = request.POST.get("summary-bags")
+        categories = request.POST.getlist('categories')  # Get selected category IDs
+        quantity = request.POST.get('bags')  # Get bags quantity
+        institution_name = request.POST.get('organization')  # Get selected institution name
+        address = request.POST.get('address')
+        city = request.POST.get('city')
+        postcode = request.POST.get('postcode')
+        phone_number = request.POST.get('phone')
+        pick_up_date = request.POST.get('data')
+        pick_up_time = request.POST.get('time')
+        pick_up_comment = request.POST.get('more_info')
 
-        institution_name = request.POST.get("summary-institution")
+        selected_categories = Category.objects.filter(id__in=categories)
         institution = Institution.objects.get(name=institution_name)
 
-        address = request.POST.get("address")
-        phone_number = request.POST.get("phone")
-        city = request.POST.get("city")
-        zip_code = request.POST.get("postcode")
-        pick_up_date = request.POST.get("summary-date")
-        pick_up_time = request.POST.get("summary-time")
-        pick_up_comment = request.POST.get("summary-date")
-
-        if quantity and categories and institution and address and phone_number and city and zip_code and pick_up_date and pick_up_time:
-            Donation.objects.create(user=user, quantity=int(quantity), address=address, city=city, zip_code=zip_code,
-                                    pick_up_date=pick_up_date, pick_up_time=pick_up_time,
-                                    pick_up_comment=pick_up_comment)
+        if quantity and categories and institution and address and phone_number and city and postcode and pick_up_date and pick_up_time:
+            # Create a Donation object with the form data
+            donation = Donation.objects.create(
+                quantity=quantity,
+                institution=institution,
+                address=address,
+                city=city,
+                zip_code=postcode,
+                phone_number=phone_number,
+                pick_up_date=pick_up_date,
+                pick_up_time=pick_up_time,
+                pick_up_comment=pick_up_comment,
+                user=user
+            )
+            donation.categories.set(selected_categories)
             return render(request, 'form-confirmation.html')
+
         ctx = {
             'categories': Category.objects.all().order_by('name'),
             'institutions': Institution.objects.all().order_by('name')

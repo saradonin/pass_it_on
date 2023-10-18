@@ -283,7 +283,7 @@ document.addEventListener("DOMContentLoaded", function () {
          * Show next or previous section etc.
          */
         updateForm() {
-            // TODO validation
+
             // Reset previous error messages
             this.$errorMessage1.textContent
                 = this.$errorMessage2.textContent
@@ -291,12 +291,10 @@ document.addEventListener("DOMContentLoaded", function () {
                 = this.$errorMessage4.textContent
                 = '';
 
-
             // Validate current step before proceeding
             if (this.currentStep > 1 && !this.validateStep(this.currentStep - 1)) {
                 return; // Do not proceed if validation fails
             }
-
 
             this.$step.innerText = this.currentStep;
 
