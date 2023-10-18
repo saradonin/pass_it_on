@@ -204,6 +204,11 @@ document.addEventListener("DOMContentLoaded", function () {
             this.$summaryTime = form.querySelector("#summary-time")
             this.$summaryInfo = form.querySelector("#summary-info")
 
+
+            this.$errorMessage1 = form.querySelector("#error-message-1")
+            this.$errorMessage2 = form.querySelector("#error-message-2")
+            this.$errorMessage3 = form.querySelector("#error-message-3")
+
             this.$stepInstructions = form.querySelectorAll(".form--steps-instructions p");
             const $stepForms = form.querySelectorAll("form > div");
             this.slides = [...this.$stepInstructions, ...$stepForms];
@@ -224,11 +229,22 @@ document.addEventListener("DOMContentLoaded", function () {
          */
         events() {
             // Next step
+            // this.$next.forEach(btn => {
+            //     btn.addEventListener("click", e => {
+            //         e.preventDefault();
+            //         this.currentStep++;
+            //         this.updateForm();
+            //     });
+            // });
+
             this.$next.forEach(btn => {
-                btn.addEventListener("click", e => {
+                btn.addEventListener("click", async e => {
                     e.preventDefault();
-                    this.currentStep++;
-                    this.updateForm();
+                    const isValid = this.validateStep(this.currentStep - 1);
+                    if (isValid) {
+                        this.currentStep++;
+                        this.updateForm();
+                    }
                 });
             });
 
@@ -257,9 +273,21 @@ document.addEventListener("DOMContentLoaded", function () {
          * Show next or previous section etc.
          */
         updateForm() {
-            this.$step.innerText = this.currentStep;
+            // TODO validation
+            // Reset previous error messages
+            this.$errorMessage1.textContent
+                = this.$errorMessage2.textContent
+                = this.$errorMessage3.textContent
+                = '';
 
-            // TODO: Validation
+
+            // Validate current step before proceeding
+            if (this.currentStep > 1 && !this.validateStep(this.currentStep - 1)) {
+                return; // Do not proceed if validation fails
+            }
+
+
+            this.$step.innerText = this.currentStep;
 
             this.slides.forEach(slide => {
                 slide.classList.remove("active");
@@ -293,8 +321,8 @@ document.addEventListener("DOMContentLoaded", function () {
                 .filter(checkbox => checkbox.checked)
                 .map(checkbox => checkbox.dataset.categoryName);
 
-            this.$summaryQuantity.innerHTML = this.$pickupQuantity.value + " worki" + "&nbsp;" // space
-            let selectedInstitution = form.querySelector('[name="organization"]:checked')
+            this.$summaryQuantity.innerHTML = this.$pickupQuantity.value + " " + "worki" + "&nbsp;" // space
+            const selectedInstitution = form.querySelector('[name="organization"]:checked')
             if (selectedInstitution) {
                 this.$summaryInstitution.textContent = selectedInstitution.value
             }
@@ -305,13 +333,50 @@ document.addEventListener("DOMContentLoaded", function () {
             this.$summaryPhone.textContent = this.$pickupPhone.value
             this.$summaryDate.textContent = this.$pickupDate.value
             this.$summaryTime.textContent = "godz. " + this.$pickupTime.value
-            if (this.$pickupInfo.value === ""){
+            if (this.$pickupInfo.value === "") {
                 this.$summaryInfo.textContent = "Brak uwag"
             } else {
                 this.$summaryInfo.textContent = this.$pickupInfo.value
             }
 
 
+        }
+
+        /**
+         * Validate input fields for a specific step
+         */
+        validateStep(step) {
+            switch (step) {
+                case 1:
+                    const selectedCategories = Array.from(this.$categoryCheckboxes).some(checkbox => checkbox.checked);
+                    if (!selectedCategories) {
+                        this.$errorMessage1.textContent = 'Zaznacz co najmniej jedną kategorię';
+                        return false;
+                    }
+                    return true;
+                case 2:
+                    const numberOfBags = this.$pickupQuantity.value;
+                    if (!numberOfBags || numberOfBags < 1) {
+                        this.$errorMessage2.textContent = 'Podaj liczbę worków';
+                        return false;
+                    }
+                    return true;
+                case 3:
+                    const selectedInstitution = form.querySelector('[name="organization"]:checked')
+                    if (!selectedInstitution) {
+                        this.$errorMessage3.textContent = 'Wybierz instytucję';
+                        return false;
+                    }
+                    return true;
+                case 4:
+
+
+
+                // Add more cases for other steps if needed
+
+                default:
+                    return true; // No validation for other steps by default
+            }
         }
 
         /**

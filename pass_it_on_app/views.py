@@ -134,4 +134,14 @@ class DonationAddView(View):
         pick_up_date = request.POST.get("summary-date")
         pick_up_time = request.POST.get("summary-time")
         pick_up_comment = request.POST.get("summary-date")
+        ctx = {
+            "error_message_1": "",
+            'categories': Category.objects.all().order_by('name'),
+            'institutions': Institution.objects.all().order_by('name')
+        }
+        if not categories:
+            ctx["error_message_1"] = "Zaznacz co najmniej jedną kategorię"
+
+        return render(request, 'form.html', ctx)
+
 
