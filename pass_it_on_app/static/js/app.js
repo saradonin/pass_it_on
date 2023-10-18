@@ -298,7 +298,7 @@ document.addEventListener("DOMContentLoaded", function () {
             if (selectedInstitution) {
                 this.$summaryInstitution.textContent = selectedInstitution.value
             }
-            this.$summaryCategories.textContent = "(" + selectedCategoriesNames + ")"
+            this.$summaryCategories.textContent = ("(" + selectedCategoriesNames + ")").replace(",", ", ")
             this.$summaryStreet.textContent = this.$pickupStreet.value
             this.$summaryCity.textContent = this.$pickupCity.value
             this.$summaryPostcode.textContent = this.$pickupPostcode.value
