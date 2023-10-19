@@ -252,7 +252,8 @@ document.addEventListener("DOMContentLoaded", function () {
 
             // Next step button (validate on mouseover)
             this.$next.forEach(btn => {
-                btn.addEventListener("mouseover", () => {
+                btn.addEventListener("mouseover", e => {
+                    e.preventDefault();
                     if (!this.isButtonDisabled) {
                         const isValid = this.validateStep(this.currentStep);
                         if (isValid) {
