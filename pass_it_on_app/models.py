@@ -38,6 +38,10 @@ class Institution(models.Model):
         """
         return self.name
 
+    class Meta:
+        verbose_name = "Instytucja"
+        verbose_name_plural = "Instytucje"
+
 
 class Donation(models.Model):
     """
