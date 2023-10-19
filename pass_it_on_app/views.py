@@ -3,7 +3,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.shortcuts import render, redirect
 from django.urls import reverse_lazy
 from django.views import View
-from django.views.generic import ListView, UpdateView, CreateView
+from django.views.generic import ListView, UpdateView, CreateView, DeleteView
 
 from pass_it_on_app.models import Institution, Donation, User, Category
 
@@ -234,6 +234,16 @@ class InstitutionUpdateView(SuperUserRequiredMixin, UpdateView):
     model = Institution
     fields = "__all__"
     template_name = "institution_update_form.html"
+    success_url = reverse_lazy('institution-list')
+
+
+class InstitutionDeleteView(SuperUserRequiredMixin, DeleteView):
+    """
+    Display confirmation and handle delete institution
+    """
+    model = Institution
+    template_name = 'institution_confirm_delete.html'
+    pk_url_kwarg = 'institution_id'
     success_url = reverse_lazy('institution-list')
 
 

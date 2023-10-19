@@ -37,7 +37,7 @@
                             {% endfor %}
                         </td>
                         <td><a href="{% url 'institution-update' institution.id %}" class="btn">Edytuj</a></td>
-                        <td><a href="#" class="btn">Usuń</a></td>
+                        <td><a href="{% url 'institution-delete' institution.id %}" class="btn">Usuń</a></td>
                     </tr>
                 {% endfor %}
                 </tbody>
