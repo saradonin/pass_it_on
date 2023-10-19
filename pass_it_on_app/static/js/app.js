@@ -243,9 +243,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 btn.addEventListener("click", e => {
                     e.preventDefault();
 
-                    // Validate the current step
                     if (this.validateStep(this.currentStep)) {
-                        // Validation passed, increment the step and update the form
                         this.currentStep++;
                         this.updateForm();
                     }
@@ -258,14 +256,13 @@ document.addEventListener("DOMContentLoaded", function () {
                     if (!this.isButtonDisabled) {
                         const isValid = this.validateStep(this.currentStep);
                         if (isValid) {
-                            btn.disabled = false; // Enable the button if the form is valid
+                            btn.disabled = false;
                         } else {
-                            btn.disabled = true; // Disable the button if the form is not valid
+                            btn.disabled = true;
                         }
                     }
                 });
             });
-
 
             // Previous step
             this.$prev.forEach(btn => {
@@ -287,6 +284,7 @@ document.addEventListener("DOMContentLoaded", function () {
             this.$form.querySelector("form").addEventListener("submit", e => this.submit(e));
         }
 
+
         /**
          * Update form front-end
          * Show next or previous section etc.
@@ -300,11 +298,6 @@ document.addEventListener("DOMContentLoaded", function () {
                 = this.$errorMessage4.textContent
                 = '';
 
-            // // Validate current step before proceeding
-            // if (this.currentStep > 1 && !this.validateStep(this.currentStep - 1)) {
-            //     return; // Do not proceed if validation fails
-            // }
-
             this.$step.innerText = this.currentStep;
 
             this.slides.forEach(slide => {
@@ -317,7 +310,6 @@ document.addEventListener("DOMContentLoaded", function () {
 
             this.$stepInstructions[0].parentElement.parentElement.hidden = this.currentStep >= 6;
             this.$step.parentElement.hidden = this.currentStep >= 6;
-
 
             // Filter institutions based on selected categories
             const selectedCategories = Array.from(this.$categoryCheckboxes)
@@ -356,8 +348,6 @@ document.addEventListener("DOMContentLoaded", function () {
             } else {
                 this.$summaryInfo.textContent = this.$pickupInfo.value
             }
-
-
         }
 
         /**
@@ -422,8 +412,6 @@ document.addEventListener("DOMContentLoaded", function () {
 
         /**
          * Submit form
-         *
-         * TODO: validation, send data to server
          */
         submit(e) {
             e.preventDefault();
