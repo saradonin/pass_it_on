@@ -1,7 +1,8 @@
 from django.contrib.auth import authenticate, login, logout
-from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.shortcuts import render, redirect
 from django.views import View
+from django.views.generic import ListView
 
 from pass_it_on_app.models import Institution, Donation, User, Category
 
@@ -163,9 +164,52 @@ class DonationAddView(LoginRequiredMixin, View):
 
 class DonationConfirmView(LoginRequiredMixin, View):
     """
-    View for rendering the donation form.
+    View for rendering the donation confirmation message.
     """
     login_url = "/login/"
 
     def get(self, request):
         return render(request, 'form-confirmation.html')
+
+
+class SuperUserRequiredMixin(LoginRequiredMixin, UserPassesTestMixin):
+
+    def test_func(self):
+        return self.request.user.is_superuser
+
+
+class AdminMenuView(SuperUserRequiredMixin, View):
+    """
+    View for rendering admin panel.
+    """
+    login_url = "/login/"
+
+    def get(self, request):
+        return render(request, 'admin_panel.html')
+
+
+# class UserListView(SuperUserRequiredMixin, View):
+#     """
+#     View for rendering user list.
+#     """
+#     login_url = "/login/"
+#
+#     def get(self, request):
+#         return render(request, 'user_list.html', )
+
+
+class UserListView(SuperUserRequiredMixin, ListView):
+    """
+    View for displaying a list of perfumers.
+    """
+    model = User
+    ordering = ['id']
+    template_name = "user_list.html"
+    paginate_by = 20
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        return context
+
+
+

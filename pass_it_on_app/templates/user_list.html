@@ -1,0 +1,55 @@
+{% extends '__base__.html' %}
+{% block content %}
+    <!-- //--------------------------- header -------------------------// -->
+    <header>
+        {% include 'navbar.html' %}
+        {% block navbar %}{% endblock navbar %}
+    </header>
+    <!-- //--------------------------- header end ---------------------// -->
+    <section class="admin-menu">
+        <h2>Panel administracyjny</h2>
+
+        <ul class="admin--buttons">
+            <li><a href="{% url 'user-list' %}" class="btn btn--without-border active">Użytkownicy</a></li>
+            <li><a href="#" class="btn btn--without-border">Instytucje</a></li>
+            <li><a href="#" class="btn btn--without-border">Dary</a></li>
+        </ul>
+    </section>
+
+    <section>
+        <div class="table-container">
+            <table class="table">
+                <thead>
+                <tr>
+                    <th>Id</th>
+                    <th>Username</th>
+                    <th>First name</th>
+                    <th>Last name</th>
+                    <th>E-mail</th>
+                    <th colspan="2"><a href="#" class="btn">Dodaj</a></th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for user in object_list %}
+                    <tr>
+                        <td>{{ user.id }}</td>
+                        <td>{{ user.username }}</td>
+                        <td>{{ user.first_name }}</td>
+                        <td>{{ user.last_name }}</td>
+                        <td>{{ user.email }}</td>
+                        <td><a href="#" class="btn">Edytuj</a></td>
+                        <td><a href="#" class="btn">Usuń</a></td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+
+            </table>
+        </div>
+
+    </section>
+
+
+
+
+
+{% endblock content %}

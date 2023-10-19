@@ -18,7 +18,7 @@ from django.contrib import admin
 from django.urls import path
 
 from pass_it_on_app.views import IndexView, UserLoginView, UserAddView, DonationAddView, UserLogoutView, \
-    DonationConfirmView
+    DonationConfirmView, AdminMenuView, UserListView
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -28,4 +28,7 @@ urlpatterns = [
     path('register/', UserAddView.as_view(), name="register"),
     path('donate/', DonationAddView.as_view(), name="donation-add"),
     path('donation-confirmed/', DonationConfirmView.as_view(), name="donation-confirmation"),
+
+    path('admin-menu/', AdminMenuView.as_view(), name="admin-menu"),
+    path('users/', UserListView.as_view(), name="user-list"),
 ]

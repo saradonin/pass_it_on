@@ -1,0 +1,19 @@
+{% extends '__base__.html' %}
+{% block content %}
+    <!-- //--------------------------- header -------------------------// -->
+    <header>
+        {% include 'navbar.html' %}
+        {% block navbar %}{% endblock navbar %}
+    </header>
+    <!-- //--------------------------- header end ---------------------// -->
+ <section class="admin-menu">
+        <h2>Panel administracyjny</h2>
+
+        <ul class="admin--buttons">
+            <li><a href="{% url 'user-list' %}" class="btn btn--without-border active">Użytkownicy</a></li>
+            <li><a href="#" class="btn btn--without-border">Instytucje</a></li>
+            <li><a href="#" class="btn btn--without-border">Dary</a></li>
+        </ul>
+ </section>
+
+{% endblock content %}
