@@ -1,0 +1,21 @@
+{% extends '__base__.html' %}
+{% block content %}
+
+    <header>
+        {% include 'navbar.html' %}
+        {% block navbar %}{% endblock navbar %}
+    </header>
+
+    <section class="login-page">
+
+        <div class="form-group">
+            <form action="" method="POST">
+                {% csrf_token %}
+                {{ form.as_p }}
+                <input class="btn" type="submit" value="Zapisz">
+            </form>
+        </div>
+
+    </section>
+
+{% endblock content %}

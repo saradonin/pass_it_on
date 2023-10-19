@@ -1,8 +1,9 @@
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.shortcuts import render, redirect
+from django.urls import reverse_lazy
 from django.views import View
-from django.views.generic import ListView
+from django.views.generic import ListView, UpdateView, CreateView
 
 from pass_it_on_app.models import Institution, Donation, User, Category
 
@@ -21,9 +22,9 @@ class IndexView(View):
             if donation.institution.id not in institutions_supported:
                 institutions_supported.append(donation.institution.id)
 
-        foundations = Institution.objects.filter(type=1).order_by("name")
-        non_gov_organizations = Institution.objects.filter(type=2).order_by("name")
-        local_collections = Institution.objects.filter(type=3).order_by("name")
+        foundations = Institution.objects.filter(type="1").order_by("name")
+        non_gov_organizations = Institution.objects.filter(type="2").order_by("name")
+        local_collections = Institution.objects.filter(type="3").order_by("name")
 
         ctx = {
             "institutions_supported": len(institutions_supported),
@@ -216,4 +217,21 @@ class InstitutionListView(SuperUserRequiredMixin, ListView):
         return context
 
 
+class InstitutionAddView(SuperUserRequiredMixin, CreateView):
+    """
+    View for adding new institution.
+    """
+    model = Institution
+    fields = "__all__"
+    template_name = "institution_add_form.html"
+    success_url = reverse_lazy('institution-list')
 
+
+class InstitutionUpdateView(SuperUserRequiredMixin, UpdateView):
+    """
+    View for updating institution details.
+    """
+    model = Institution
+    fields = "__all__"
+    template_name = "institution_update_form.html"
+    success_url = reverse_lazy('institution-list')

@@ -21,7 +21,7 @@
                     <th>Rodzaj</th>
                     <th>Opis</th>
                     <th>Kategorie</th>
-                    <th colspan="2"><a href="#" class="btn">Dodaj</a></th>
+                    <th colspan="2"><a href="{% url 'institution-add' %}" class="btn">Dodaj</a></th>
                 </tr>
                 </thead>
                 <tbody>
@@ -36,7 +36,7 @@
                                 {{ category.name }}{% if not forloop.last %}, {% endif %}
                             {% endfor %}
                         </td>
-                        <td><a href="#" class="btn">Edytuj</a></td>
+                        <td><a href="{% url 'institution-update' institution.id %}" class="btn">Edytuj</a></td>
                         <td><a href="#" class="btn">Usuń</a></td>
                     </tr>
                 {% endfor %}
