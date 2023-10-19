@@ -214,6 +214,8 @@ document.addEventListener("DOMContentLoaded", function () {
             const $stepForms = form.querySelectorAll("form > div");
             this.slides = [...this.$stepInstructions, ...$stepForms];
 
+            this.isButtonDisabled = false
+
             this.init();
         }
 
@@ -229,15 +231,6 @@ document.addEventListener("DOMContentLoaded", function () {
          * All events that are happening in form
          */
         events() {
-            // // Next step
-            // this.$next.forEach(btn => {
-            //     btn.addEventListener("click", e => {
-            //         e.preventDefault();
-            //         this.currentStep++;
-            //         this.updateForm();
-            //     });
-            // });
-
             // Next step
             this.$next.forEach(btn => {
                 btn.addEventListener("click", e => {
@@ -282,7 +275,13 @@ document.addEventListener("DOMContentLoaded", function () {
             });
 
             // Form submit
-            this.$form.querySelector("form").addEventListener("submit", e => this.submit(e));
+            // this.$form.querySelector("form").addEventListener("submit", e => this.submit(e));
+
+            this.$form.querySelector("form").addEventListener("submit", e => {
+                e.preventDefault();
+                this.submit(e);
+            });
+
         }
 
 

@@ -152,10 +152,20 @@ class DonationAddView(LoginRequiredMixin, View):
                 user=user
             )
             donation.categories.set(selected_categories)
-            return render(request, 'form-confirmation.html')
+            return redirect('donation-confirmation')
 
         ctx = {
             'categories': Category.objects.all().order_by('name'),
             'institutions': Institution.objects.all().order_by('name')
         }
         return render(request, 'form.html', ctx)
+
+
+class DonationConfirmView(LoginRequiredMixin, View):
+    """
+    View for rendering the donation form.
+    """
+    login_url = "/login/"
+
+    def get(self, request):
+        return render(request, 'form-confirmation.html')
