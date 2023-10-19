@@ -1,4 +1,5 @@
 from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.shortcuts import render, redirect
 from django.views import View
 
@@ -15,7 +16,7 @@ class IndexView(View):
         institutions_supported = []
         for donation in Donation.objects.all():
             bags_given_count += donation.quantity
-            # TODO possible refactor
+
             if donation.institution.id not in institutions_supported:
                 institutions_supported.append(donation.institution.id)
 
@@ -54,10 +55,11 @@ class UserLoginView(View):
             return redirect('register')
 
 
-class UserLogoutView(View):
+class UserLogoutView(LoginRequiredMixin, View):
     """
     View for user logout.
     """
+    login_url = "/login/"
 
     def get(self, request):
         logout(request)
@@ -106,24 +108,20 @@ class UserAddView(View):
         return render(request, 'register.html', ctx)
 
 
-class DonationAddView(View):
+class DonationAddView(LoginRequiredMixin, View):
     """
     View for rendering the donation form.
     """
+    login_url = "/login/"
 
     def get(self, request):
-        user = request.user
-        if user.is_authenticated:
-            ctx = {
-                'categories': Category.objects.all().order_by('name'),
-                'institutions': Institution.objects.all().order_by('name')
-            }
-            return render(request, 'form.html', ctx)
-        else:
-            return redirect('login')
+        ctx = {
+            'categories': Category.objects.all().order_by('name'),
+            'institutions': Institution.objects.all().order_by('name')
+        }
+        return render(request, 'form.html', ctx)
 
     def post(self, request):
-        # TODO fix submission
         user = request.user
         categories = request.POST.getlist('categories')  # Get selected category IDs
         quantity = request.POST.get('bags')  # Get bags quantity
