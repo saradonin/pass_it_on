@@ -188,23 +188,27 @@ class AdminMenuView(SuperUserRequiredMixin, View):
         return render(request, 'admin_panel.html')
 
 
-# class UserListView(SuperUserRequiredMixin, View):
-#     """
-#     View for rendering user list.
-#     """
-#     login_url = "/login/"
-#
-#     def get(self, request):
-#         return render(request, 'user_list.html', )
-
-
 class UserListView(SuperUserRequiredMixin, ListView):
     """
-    View for displaying a list of perfumers.
+    View for displaying a list of users.
     """
     model = User
     ordering = ['id']
     template_name = "user_list.html"
+    paginate_by = 20
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        return context
+
+
+class InstitutionListView(SuperUserRequiredMixin, ListView):
+    """
+    View for displaying a list of institutions.
+    """
+    model = Institution
+    ordering = ['id']
+    template_name = "institution_list.html"
     paginate_by = 20
 
     def get_context_data(self, **kwargs):

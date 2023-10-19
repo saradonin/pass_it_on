@@ -471,6 +471,10 @@ h2:after {
     cursor: pointer;
 }
 
+.btn--admin {
+    width: 240px;
+}
+
 /* line 12, scss/modules/_buttons.scss */
 .btn:hover {
     border-color: #f9c910;
