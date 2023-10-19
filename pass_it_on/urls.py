@@ -17,20 +17,25 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 
-from pass_it_on_app.views import IndexView, UserLoginView, UserAddView, DonationAddView, UserLogoutView, \
-    DonationConfirmView, AdminMenuView, UserListView, InstitutionListView, InstitutionUpdateView, InstitutionAddView
+from pass_it_on_app.views import IndexView, UserLoginView, UserRegisterView, DonationAddView, UserLogoutView, \
+    DonationConfirmView, AdminMenuView, UserListView, InstitutionListView, InstitutionUpdateView, InstitutionAddView, \
+    UserAddView, UserUpdateView
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', IndexView.as_view(), name="index"),
     path('login/', UserLoginView.as_view(), name="login"),
     path('logout/', UserLogoutView.as_view(), name="logout"),
-    path('register/', UserAddView.as_view(), name="register"),
+    path('register/', UserRegisterView.as_view(), name="register"),
     path('donate/', DonationAddView.as_view(), name="donation-add"),
     path('donation-confirmed/', DonationConfirmView.as_view(), name="donation-confirmation"),
 
     path('admin-menu/', AdminMenuView.as_view(), name="admin-menu"),
+
     path('users/', UserListView.as_view(), name="user-list"),
+    path('user/add/', UserAddView.as_view(), name="user-add"),
+    path('user/update/<pk>', UserUpdateView.as_view(), name="user-update"),
+
     path('institutions/', InstitutionListView.as_view(), name="institution-list"),
     path('institution/add/', InstitutionAddView.as_view(), name="institution-add"),
     path('institution/update/<pk>', InstitutionUpdateView.as_view(), name="institution-update"),

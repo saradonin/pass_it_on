@@ -21,7 +21,7 @@
                     <th>First name</th>
                     <th>Last name</th>
                     <th>E-mail</th>
-                    <th colspan="2"><a href="#" class="btn">Dodaj</a></th>
+                    <th colspan="2"><a href="{% url 'user-add' %}" class="btn">Dodaj</a></th>
                 </tr>
                 </thead>
                 <tbody>
@@ -32,7 +32,7 @@
                         <td>{{ user.first_name }}</td>
                         <td>{{ user.last_name }}</td>
                         <td>{{ user.email }}</td>
-                        <td><a href="#" class="btn">Edytuj</a></td>
+                        <td><a href="{% url 'user-update' user.id %}" class="btn">Edytuj</a></td>
                         <td><a href="#" class="btn">Usuń</a></td>
                     </tr>
                 {% endfor %}

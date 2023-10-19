@@ -68,7 +68,7 @@ class UserLogoutView(LoginRequiredMixin, View):
         return redirect('index')
 
 
-class UserAddView(View):
+class UserRegisterView(View):
     """
     View for registering new user.
     """
@@ -235,3 +235,24 @@ class InstitutionUpdateView(SuperUserRequiredMixin, UpdateView):
     fields = "__all__"
     template_name = "institution_update_form.html"
     success_url = reverse_lazy('institution-list')
+
+
+# TODO custom forms for user add / edit because of hashed passwords
+class UserAddView(SuperUserRequiredMixin, CreateView):
+    """
+    View for adding new user.
+    """
+    model = User
+    fields = "__all__"
+    template_name = "user_add_form.html"
+    success_url = reverse_lazy('user-list')
+
+
+class UserUpdateView(SuperUserRequiredMixin, UpdateView):
+    """
+    View for updating user details.
+    """
+    model = User
+    fields = "__all__"
+    template_name = "user_update_form.html"
+    success_url = reverse_lazy('user-list')
