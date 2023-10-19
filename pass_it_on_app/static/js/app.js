@@ -243,7 +243,9 @@ document.addEventListener("DOMContentLoaded", function () {
                 btn.addEventListener("click", e => {
                     e.preventDefault();
 
-                    if (!this.isButtonDisabled) {
+                    // Validate the current step
+                    if (this.validateStep(this.currentStep)) {
+                        // Validation passed, increment the step and update the form
                         this.currentStep++;
                         this.updateForm();
                     }
@@ -254,10 +256,11 @@ document.addEventListener("DOMContentLoaded", function () {
             this.$next.forEach(btn => {
                 btn.addEventListener("mouseover", () => {
                     if (!this.isButtonDisabled) {
-                        const isValid = this.validateStep(this.currentStep - 1);
-                        if (!isValid) {
-                            this.isButtonDisabled = true;
-                            btn.disabled = true;
+                        const isValid = this.validateStep(this.currentStep);
+                        if (isValid) {
+                            btn.disabled = false; // Enable the button if the form is valid
+                        } else {
+                            btn.disabled = true; // Disable the button if the form is not valid
                         }
                     }
                 });
@@ -297,10 +300,10 @@ document.addEventListener("DOMContentLoaded", function () {
                 = this.$errorMessage4.textContent
                 = '';
 
-            // Validate current step before proceeding
-            if (this.currentStep > 1 && !this.validateStep(this.currentStep - 1)) {
-                return; // Do not proceed if validation fails
-            }
+            // // Validate current step before proceeding
+            // if (this.currentStep > 1 && !this.validateStep(this.currentStep - 1)) {
+            //     return; // Do not proceed if validation fails
+            // }
 
             this.$step.innerText = this.currentStep;
 
