@@ -237,26 +237,32 @@ document.addEventListener("DOMContentLoaded", function () {
             //         this.updateForm();
             //     });
             // });
-            let isButtonDisabled = false;
 
             // Next step
             this.$next.forEach(btn => {
-                btn.addEventListener("click", async e => {
+                btn.addEventListener("click", e => {
                     e.preventDefault();
 
-                    if (isButtonDisabled) return;
-                    isButtonDisabled = true;
-
-                    const isValid = this.validateStep(this.currentStep - 1);
-                    if (isValid) {
+                    if (!this.isButtonDisabled) {
                         this.currentStep++;
                         this.updateForm();
                     }
-
-                    // Re-enable the button after validation is complete
-                    isButtonDisabled = false;
                 });
             });
+
+            // Next step button (validate on mouseover)
+            this.$next.forEach(btn => {
+                btn.addEventListener("mouseover", () => {
+                    if (!this.isButtonDisabled) {
+                        const isValid = this.validateStep(this.currentStep - 1);
+                        if (!isValid) {
+                            this.isButtonDisabled = true;
+                            btn.disabled = true;
+                        }
+                    }
+                });
+            });
+
 
             // Previous step
             this.$prev.forEach(btn => {
