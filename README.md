@@ -21,9 +21,10 @@ To set up and run this project locally, follow these steps:
 5. Create a superuser account: `python manage.py createsuperuser`.
 6. Start the development server: `python manage.py runserver`.
 
+## Layout
+Page layout prototype was prepared by Magda - a graduate of CodesLab UX course.
 
 ## License
-
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
 

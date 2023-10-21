@@ -285,6 +285,7 @@ class UserUpdateView(StaffRequiredMixin, View):
         if name and surname and email:
             user.first_name = name
             user.last_name = surname
+            user.username = user.email = email
             user.is_active = is_active
             user.is_staff = is_staff
             user.save()
@@ -299,7 +300,11 @@ class UserProfileView(LoginRequiredMixin, View):
     """
 
     def get(self, request):
-        return render(request, 'user_profile.html')
+        user = request.user
+        ctx = {
+            "donations": Donation.objects.filter(user=user).order_by("-pick_up_date")
+        }
+        return render(request, 'user_profile.html', ctx)
 
 
 class UserDeleteView(StaffRequiredMixin, DeleteView):

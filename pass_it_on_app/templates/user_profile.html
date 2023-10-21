@@ -7,32 +7,50 @@
     </header>
     <!-- //--------------------------- header end ---------------------// -->
     <section class="admin-menu">
-        <h2>Profil użytkownika</h2>
+        <h2>Profil użytkownika:
+            {{ current_user.first_name }}
+            {{ current_user.last_name }}
+            ({{ current_user.email }})
+        </h2>
     </section>
+
 
     <section>
         <div class="table-container">
-            <table class="table">
-                <thead>
-                <tr>
-                    <th>Id</th>
-                    <th>Imię</th>
-                    <th>Nazwisko</th>
-                    <th>E-mail</th>
-                </tr>
-                </thead>
-                <tbody>
+            {% if not donations %}
+                <h1>Nie przekazałeś jeszcze żadnych darów</h1>
+            {% else %}
+                <table class="table">
+                    <thead>
                     <tr>
-                        <td>{{ current_user.id }}</td>
-                        <td>{{ current_user.first_name }}</td>
-                        <td>{{ current_user.last_name }}</td>
-                        <td>{{ current_user.email }}</td>
+                        <th>Liczba worków</th>
+                        <th>Instytucja</th>
+                        <th>Kategorie</th>
+                        <th>Data przekazania</th>
+                        <th>Szczegóły</th>
                     </tr>
-                </tbody>
+                    </thead>
+                    <tbody>
+                    {% for donation in donations %}
+                        <tr>
+                            <td>{{ donation.quantity }}</td>
+                            <td>{{ donation.institution.name }}</td>
+                            <td>
+                                {% for category in donation.categories.all %}
+                                    {{ category.name }}{% if not forloop.last %}, {% endif %}
+                                {% endfor %}
+                            </td>
+                            <td>{{ donation.pick_up_date|date:"Y-m-d" }}</td>
+                            <td><a href="" class="btn btn--without-border">Szczegóły</a></td>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
 
-            </table>
+            {% endif %}
+
         </div>
-
     </section>
 
 {% endblock content %}
