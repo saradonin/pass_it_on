@@ -348,6 +348,10 @@ document.addEventListener("DOMContentLoaded", function () {
             } else {
                 this.$summaryInfo.textContent = this.$pickupInfo.value
             }
+                // Dynamically set the 'min' attribute for the date input
+
+            const today = new Date().toISOString().split('T')[0];
+            this.$pickupDate.setAttribute("min", today);
         }
 
         /**
