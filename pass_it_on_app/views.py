@@ -206,50 +206,6 @@ class UserListView(StaffRequiredMixin, ListView):
         return context
 
 
-class InstitutionListView(StaffRequiredMixin, ListView):
-    """
-    View for displaying a list of institutions.
-    """
-    model = Institution
-    ordering = ['id']
-    template_name = "institution_list.html"
-    paginate_by = 20
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        return context
-
-
-class InstitutionAddView(StaffRequiredMixin, CreateView):
-    """
-    View for adding new institution.
-    """
-    model = Institution
-    fields = "__all__"
-    template_name = "institution_add_form.html"
-    success_url = reverse_lazy('institution-list')
-
-
-class InstitutionUpdateView(StaffRequiredMixin, UpdateView):
-    """
-    View for updating institution details.
-    """
-    model = Institution
-    fields = "__all__"
-    template_name = "institution_update_form.html"
-    success_url = reverse_lazy('institution-list')
-
-
-class InstitutionDeleteView(StaffRequiredMixin, DeleteView):
-    """
-    Display confirmation and handle delete institution
-    """
-    model = Institution
-    template_name = 'institution_confirm_delete.html'
-    pk_url_kwarg = 'institution_id'
-    success_url = reverse_lazy('institution-list')
-
-
 class UserAddView(StaffRequiredMixin, View):
     """
     View for registering new user.
@@ -345,3 +301,47 @@ class UserDeleteView(StaffRequiredMixin, DeleteView):
     template_name = 'user_confirm_delete.html'
     pk_url_kwarg = 'user_id'
     success_url = reverse_lazy('user-list')
+
+
+class InstitutionListView(StaffRequiredMixin, ListView):
+    """
+    View for displaying a list of institutions.
+    """
+    model = Institution
+    ordering = ['id']
+    template_name = "institution_list.html"
+    paginate_by = 20
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        return context
+
+
+class InstitutionAddView(StaffRequiredMixin, CreateView):
+    """
+    View for adding new institution.
+    """
+    model = Institution
+    fields = "__all__"
+    template_name = "institution_add_form.html"
+    success_url = reverse_lazy('institution-list')
+
+
+class InstitutionUpdateView(StaffRequiredMixin, UpdateView):
+    """
+    View for updating institution details.
+    """
+    model = Institution
+    fields = "__all__"
+    template_name = "institution_update_form.html"
+    success_url = reverse_lazy('institution-list')
+
+
+class InstitutionDeleteView(StaffRequiredMixin, DeleteView):
+    """
+    Display confirmation and handle delete institution
+    """
+    model = Institution
+    template_name = 'institution_confirm_delete.html'
+    pk_url_kwarg = 'institution_id'
+    success_url = reverse_lazy('institution-list')

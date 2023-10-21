@@ -15,9 +15,9 @@
         <form method="POST">
             {% csrf_token %}
             <div class="form-group form-group--buttons">
-                <a href="{% url 'institution-list' %}" class="btn">Anuluj</a>
+                <a href="{% url 'institution-list' %}" class="btn btn--admin">Anuluj</a>
 
-                <input type="submit" class="btn" value="Usuń">
+                <input type="submit" class="btn btn--admin" value="Usuń">
             </div>
         </form>
     </section>
