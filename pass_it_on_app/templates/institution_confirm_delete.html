@@ -5,23 +5,21 @@
         {% include 'navbar.html' %}
         {% block navbar %}{% endblock navbar %}
     </header>
-    <header>
-        {% include 'navbar_admin.html' %}
-        {% block admin %}{% endblock admin %}
-    </header>
+
+    <section class="admin-menu">
+        <h2>Czy na pewno chcesz usunąć instytucję:
+            <br>{{ institution.name }}</h2>
+    </section>
 
     <section class="login-page">
-        <h1>Czy na pewno chcesz usunąć instytucję: {{ institution.name }}</h1>
-        <div class="form-group form-group--buttons">
-            <form method="POST">
-                {% csrf_token %}
+        <form method="POST">
+            {% csrf_token %}
+            <div class="form-group form-group--buttons">
+                <a href="{% url 'institution-list' %}" class="btn">Anuluj</a>
 
                 <input type="submit" class="btn" value="Usuń">
-
-                <a href="{% url 'institution-list' %}" class="btn">Anuluj</a>
-            </form>
-        </div>
-
+            </div>
+        </form>
     </section>
 
 {% endblock content %}

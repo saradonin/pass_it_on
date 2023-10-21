@@ -5,24 +5,20 @@
         {% include 'navbar.html' %}
         {% block navbar %}{% endblock navbar %}
     </header>
-    <header>
-        {% include 'navbar_admin.html' %}
-        {% block admin %}{% endblock admin %}
-    </header>
+
+    <section class="admin-menu">
+        <h2>Czy na pewno chcesz usunąć użytkownika:
+            <br>{{ user.first_name }} {{ user.last_name }} ({{ user.username }})</h2>
+    </section>
 
     <section class="login-page">
-        <h1>Czy na pewno chcesz usunąć użytkownika: {{ user.first_name }} {{ user.last_name }} ({{ user.username }})</h1>
-        <div class="form-group form-group--buttons">
-            <form method="POST">
-                {% csrf_token %}
-
-                <input type="submit" class="btn" value="Usuń">
-
+        <form method="POST">
+            {% csrf_token %}
+            <div class="form-group form-group--buttons">
                 <a href="{% url 'user-list' %}" class="btn">Anuluj</a>
-
-            </form>
-        </div>
-
+                <input type="submit" class="btn" value="Usuń">
+            </div>
+        </form>
     </section>
 
 {% endblock content %}

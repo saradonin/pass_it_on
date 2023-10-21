@@ -33,9 +33,15 @@
                         <td>{{ user.first_name }}</td>
                         <td>{{ user.last_name }}</td>
                         <td>{{ user.email }}</td>
-                        <td>{{ user.is_staff|yesno:"Yes,No"}}</td>
+                        <td>{{ user.is_staff|yesno:"Yes,No" }}</td>
                         <td><a href="{% url 'user-update' user.id %}" class="btn">Edytuj</a></td>
-                        <td><a href="{% url 'user-delete' user.id %}" class="btn">Usuń</a></td>
+                        {% if user == current_user %}
+                            <td>
+                                <button disabled href="" class="btn">Usuń</button>
+                            </td>
+                        {% else %}
+                            <td><a href="{% url 'user-delete' user.id %}" class="btn">Usuń</a></td>
+                        {% endif %}
                     </tr>
                 {% endfor %}
                 </tbody>
