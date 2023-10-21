@@ -1,12 +1,12 @@
 <nav class="container container--70">
-    {% if user.is_authenticated %}
+    {% if current_user.is_authenticated %}
     <ul class="nav--actions">
         <li class="logged-user">
-            Witaj {{  user.first_name }}
+            Witaj {{  current_user.first_name }}
             <ul class="dropdown">
                 <li><a href="#">Profil</a></li>
                 <li><a href="#">Ustawienia</a></li>
-                {% if user.is_superuser %}
+                {% if current_user.is_staff %}
                     <li><a href="{% url 'admin-menu' %}">Pandel administracyjny</a></li>
                 {% endif %}
                 <li><a href="{% url 'logout' %}">Wyloguj</a></li>

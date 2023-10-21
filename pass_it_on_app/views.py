@@ -173,13 +173,16 @@ class DonationConfirmView(LoginRequiredMixin, View):
         return render(request, 'form-confirmation.html')
 
 
-class SuperUserRequiredMixin(LoginRequiredMixin, UserPassesTestMixin):
+class StaffRequiredMixin(LoginRequiredMixin, UserPassesTestMixin):
+    """
+    Custom mixin testing is user is staff
+    """
 
     def test_func(self):
-        return self.request.user.is_superuser
+        return self.request.user.is_staff
 
 
-class AdminMenuView(SuperUserRequiredMixin, View):
+class AdminMenuView(StaffRequiredMixin, View):
     """
     View for rendering admin panel.
     """
@@ -189,7 +192,7 @@ class AdminMenuView(SuperUserRequiredMixin, View):
         return render(request, 'admin_panel.html')
 
 
-class UserListView(SuperUserRequiredMixin, ListView):
+class UserListView(StaffRequiredMixin, ListView):
     """
     View for displaying a list of users.
     """
@@ -203,7 +206,7 @@ class UserListView(SuperUserRequiredMixin, ListView):
         return context
 
 
-class InstitutionListView(SuperUserRequiredMixin, ListView):
+class InstitutionListView(StaffRequiredMixin, ListView):
     """
     View for displaying a list of institutions.
     """
@@ -217,7 +220,7 @@ class InstitutionListView(SuperUserRequiredMixin, ListView):
         return context
 
 
-class InstitutionAddView(SuperUserRequiredMixin, CreateView):
+class InstitutionAddView(StaffRequiredMixin, CreateView):
     """
     View for adding new institution.
     """
@@ -227,7 +230,7 @@ class InstitutionAddView(SuperUserRequiredMixin, CreateView):
     success_url = reverse_lazy('institution-list')
 
 
-class InstitutionUpdateView(SuperUserRequiredMixin, UpdateView):
+class InstitutionUpdateView(StaffRequiredMixin, UpdateView):
     """
     View for updating institution details.
     """
@@ -237,7 +240,7 @@ class InstitutionUpdateView(SuperUserRequiredMixin, UpdateView):
     success_url = reverse_lazy('institution-list')
 
 
-class InstitutionDeleteView(SuperUserRequiredMixin, DeleteView):
+class InstitutionDeleteView(StaffRequiredMixin, DeleteView):
     """
     Display confirmation and handle delete institution
     """
@@ -247,7 +250,7 @@ class InstitutionDeleteView(SuperUserRequiredMixin, DeleteView):
     success_url = reverse_lazy('institution-list')
 
 
-class UserAddView(SuperUserRequiredMixin, View):
+class UserAddView(StaffRequiredMixin, View):
     """
     View for registering new user.
     """
@@ -296,11 +299,41 @@ class UserAddView(SuperUserRequiredMixin, View):
 
 # TODO custom forms for user add / edit because of hashed passwords
 
-class UserUpdateView(SuperUserRequiredMixin, UpdateView):
+class UserUpdateView(StaffRequiredMixin, View):
     """
     View for updating user details.
     """
-    model = User
-    fields = "__all__"
-    template_name = "user_update_form.html"
-    success_url = reverse_lazy('user-list')
+
+    def get(self, request, user_id):
+        user = User.objects.get(id=user_id)
+        ctx = {
+            "user": user
+        }
+        return render(request, 'user_update_form.html', ctx)
+
+    def post(self, request, user_id):
+        user = User.objects.get(id=user_id)
+        name = request.POST.get('name')
+        surname = request.POST.get('surname')
+        email = request.POST.get('email')
+        is_active = True if request.POST.get('is_active') else False
+        is_staff = True if request.POST.get('is_staff') else False
+
+        # validation
+        ctx = {}
+        if not name:
+            ctx["name_msg"] = "Podaj imię"
+        if not surname:
+            ctx["surname_msg"] = "Podaj nazwisko"
+        if not email:
+            ctx["email_msg"] = "Podaj email"
+
+        if name and surname and email:
+            user.first_name = name
+            user.last_name = surname
+            user.is_active = is_active
+            user.is_staff = is_staff
+            user.save()
+            return redirect('user-list')
+
+        return render(request, 'user_update_form.html', ctx)
