@@ -293,6 +293,15 @@ class UserUpdateView(StaffRequiredMixin, View):
         return render(request, 'user_update_form.html', ctx)
 
 
+class UserProfileView(LoginRequiredMixin, View):
+    """
+    View for displaying user profile.
+    """
+
+    def get(self, request):
+        return render(request, 'user_profile.html')
+
+
 class UserDeleteView(StaffRequiredMixin, DeleteView):
     """
     Display confirmation and handle delete user

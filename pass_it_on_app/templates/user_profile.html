@@ -1,0 +1,38 @@
+{% extends '__base__.html' %}
+{% block content %}
+    <!-- //--------------------------- header -------------------------// -->
+    <header>
+        {% include 'navbar.html' %}
+        {% block navbar %}{% endblock navbar %}
+    </header>
+    <!-- //--------------------------- header end ---------------------// -->
+    <section class="admin-menu">
+        <h2>Profil użytkownika</h2>
+    </section>
+
+    <section>
+        <div class="table-container">
+            <table class="table">
+                <thead>
+                <tr>
+                    <th>Id</th>
+                    <th>Imię</th>
+                    <th>Nazwisko</th>
+                    <th>E-mail</th>
+                </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>{{ current_user.id }}</td>
+                        <td>{{ current_user.first_name }}</td>
+                        <td>{{ current_user.last_name }}</td>
+                        <td>{{ current_user.email }}</td>
+                    </tr>
+                </tbody>
+
+            </table>
+        </div>
+
+    </section>
+
+{% endblock content %}

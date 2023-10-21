@@ -18,8 +18,8 @@
                 <tr>
                     <th>Id</th>
                     <th>Username</th>
-                    <th>First name</th>
-                    <th>Last name</th>
+                    <th>Imię</th>
+                    <th>Nazwisko</th>
                     <th>E-mail</th>
                     <th>Administrator</th>
                     <th colspan="2"><a href="{% url 'user-add' %}" class="btn">Dodaj</a></th>
@@ -33,7 +33,7 @@
                         <td>{{ user.first_name }}</td>
                         <td>{{ user.last_name }}</td>
                         <td>{{ user.email }}</td>
-                        <td>{{ user.is_staff|yesno:"Yes,No" }}</td>
+                        <td>{{ user.is_staff|yesno:"Tak,Nie" }}</td>
                         <td><a href="{% url 'user-update' user.id %}" class="btn">Edytuj</a></td>
                         {% if user == current_user %}
                             <td>
