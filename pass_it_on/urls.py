@@ -19,7 +19,7 @@ from django.urls import path
 
 from pass_it_on_app.views import IndexView, UserLoginView, UserRegisterView, DonationAddView, UserLogoutView, \
     DonationConfirmView, AdminMenuView, UserListView, InstitutionListView, InstitutionUpdateView, InstitutionAddView, \
-    UserAddView, UserUpdateView, InstitutionDeleteView
+    UserAddView, UserUpdateView, InstitutionDeleteView, UserDeleteView
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -35,6 +35,7 @@ urlpatterns = [
     path('users/', UserListView.as_view(), name="user-list"),
     path('user/add/', UserAddView.as_view(), name="user-add"),
     path('user/update/<int:user_id>', UserUpdateView.as_view(), name="user-update"),
+    path('user/delete/<int:user_id>', UserDeleteView.as_view(), name="user-delete"),
 
     path('institutions/', InstitutionListView.as_view(), name="institution-list"),
     path('institution/add/', InstitutionAddView.as_view(), name="institution-add"),

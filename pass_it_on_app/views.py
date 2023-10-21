@@ -297,8 +297,6 @@ class UserAddView(StaffRequiredMixin, View):
         return render(request, 'user_add_form.html', ctx)
 
 
-# TODO custom forms for user add / edit because of hashed passwords
-
 class UserUpdateView(StaffRequiredMixin, View):
     """
     View for updating user details.
@@ -337,3 +335,13 @@ class UserUpdateView(StaffRequiredMixin, View):
             return redirect('user-list')
 
         return render(request, 'user_update_form.html', ctx)
+
+
+class UserDeleteView(StaffRequiredMixin, DeleteView):
+    """
+    Display confirmation and handle delete user
+    """
+    model = User
+    template_name = 'user_confirm_delete.html'
+    pk_url_kwarg = 'user_id'
+    success_url = reverse_lazy('user-list')

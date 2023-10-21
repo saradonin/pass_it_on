@@ -11,14 +11,15 @@
     </header>
 
     <section class="login-page">
-        <h1>Czy na pewno chcesz usunąć instytucję: {{ institution.name }}</h1>
+        <h1>Czy na pewno chcesz usunąć użytkownika: {{ user.first_name }} {{ user.last_name }} ({{ user.username }})</h1>
         <div class="form-group form-group--buttons">
             <form method="POST">
                 {% csrf_token %}
 
                 <input type="submit" class="btn" value="Usuń">
 
-                <a href="{% url 'institution-list' %}" class="btn">Anuluj</a>
+                <a href="{% url 'user-list' %}" class="btn">Anuluj</a>
+
             </form>
         </div>
 
