@@ -7,9 +7,10 @@
                 <li><a href="{% url 'user-profile' %}">Profil</a></li>
                 <li><a href="#">Ustawienia</a></li>
                 {% if current_user.is_staff %}
-                    <li><a href="{% url 'admin-menu' %}">Pandel administracyjny</a></li>
+                    <li><a href="{% url 'admin-menu' %}">Administracja</a></li>
                 {% endif %}
                 <li><a href="{% url 'logout' %}">Wyloguj</a></li>
+                <li><a></a></li>
             </ul>
         </li>
     </ul>
