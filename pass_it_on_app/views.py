@@ -93,7 +93,7 @@ class UserRegisterView(View):
         if not password:
             ctx["password_msg"] = "Podaj hasło"
         elif len(password) < 8:
-            ctx["password_msg"] = "Hasło musi zaiwerać co najmniej 8 znaków"
+            ctx["password_msg"] = "Hasło musi zawierać co najmniej 8 znaków"
         if not password2 or password != password2:
             ctx["password2_msg"] = "Hasła muszą być takie same"
 
@@ -247,16 +247,54 @@ class InstitutionDeleteView(SuperUserRequiredMixin, DeleteView):
     success_url = reverse_lazy('institution-list')
 
 
-# TODO custom forms for user add / edit because of hashed passwords
-class UserAddView(SuperUserRequiredMixin, CreateView):
+class UserAddView(SuperUserRequiredMixin, View):
     """
-    View for adding new user.
+    View for registering new user.
     """
-    model = User
-    fields = "__all__"
-    template_name = "user_add_form.html"
-    success_url = reverse_lazy('user-list')
 
+    def get(self, request):
+        return render(request, 'user_add_form.html')
+
+    def post(self, request):
+        name = request.POST.get('name')
+        surname = request.POST.get('surname')
+        email = request.POST.get('email')
+        password = request.POST.get('password')
+        password2 = request.POST.get('password2')
+        is_active = True if request.POST.get('is_active') else False
+        is_staff = True if request.POST.get('is_staff') else False
+
+        # validation
+        ctx = {}
+        if not name:
+            ctx["name_msg"] = "Podaj imię"
+        if not surname:
+            ctx["surname_msg"] = "Podaj nazwisko"
+        if not email:
+            ctx["email_msg"] = "Podaj email"
+        if not password:
+            ctx["password_msg"] = "Podaj hasło"
+        elif len(password) < 8:
+            ctx["password_msg"] = "Hasło musi zawierać co najmniej 8 znaków"
+        if not password2 or password != password2:
+            ctx["password2_msg"] = "Hasła muszą być takie same"
+
+        if name and surname and email and password and password2:
+            User.objects.create_user(
+                username=email,
+                first_name=name,
+                last_name=surname,
+                email=email,
+                password=password,
+                is_active=is_active,
+                is_staff=is_staff,
+            )
+            return redirect('user-list')
+
+        return render(request, 'user_add_form.html', ctx)
+
+
+# TODO custom forms for user add / edit because of hashed passwords
 
 class UserUpdateView(SuperUserRequiredMixin, UpdateView):
     """

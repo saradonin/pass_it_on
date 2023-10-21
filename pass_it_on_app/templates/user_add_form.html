@@ -11,15 +11,49 @@
     </header>
 
     <section class="login-page">
-
-        <div class="form-group">
-            <form action="" method="POST">
-                {% csrf_token %}
-                {{ form.as_p }}
-                <input class="btn" type="submit" value="Zapisz">
-            </form>
-        </div>
-
+        <h2>Załóż konto</h2>
+        <form action="" method="POST">
+            {% csrf_token %}
+            <div class="form-group">
+                <input type="text" name="name" placeholder="Imię"/>
+                <h1 style="display: inline;">{{ name_msg }}</h1>
+            </div>
+            <div class="form-group">
+                <input type="text" name="surname" placeholder="Nazwisko"/>
+                <h1 style="display: inline;">{{ surname_msg }}</h1>
+            </div>
+            <div class="form-group">
+                <input type="email" name="email" placeholder="Email"/>
+                <h1 style="display: inline;">{{ email_msg }}</h1>
+            </div>
+            <div class="form-group">
+                <input type="password" name="password" placeholder="Hasło"/>
+                <h1 style="display: inline;">{{ password_msg }}</h1>
+            </div>
+            <div class="form-group">
+                <input type="password" name="password2" placeholder="Powtórz hasło"/>
+                <h1 style="display: inline;">{{ password2_msg }}</h1>
+            </div>
+            <div class="form-group form-group--checkbox">
+                <label>
+                    <input type="checkbox" class="category-checkbox" name="is_active"
+                           value="active" checked/>
+                    <span class="checkbox"></span>
+                    <span class="description">Aktywny</span>
+                </label>
+            </div>
+            <div class="form-group form-group--checkbox">
+                <label>
+                    <input type="checkbox" class="category-checkbox" name="is_staff"
+                           value="admin"/>
+                    <span class="checkbox"></span>
+                    <span class="description">Administrator</span>
+                </label>
+            </div>
+            <div class="form-group form-group--buttons">
+                <button class="btn" type="submit">Załóż konto</button>
+            </div>
+        </form>
     </section>
 
 {% endblock content %}
