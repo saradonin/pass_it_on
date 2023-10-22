@@ -1,0 +1,29 @@
+{% extends '__base__.html' %}
+{% block content %}
+
+    <header>
+        {% include 'navbar.html' %}
+        {% block navbar %}{% endblock navbar %}
+    </header>
+
+    <section class="admin-menu">
+        <h2>Czy potwierdzasz odbiór darowizny:
+            <br>{{ donation.quantity }} worków
+            {% for category in donation.categories.all %}
+                {{ category.name }}{% if not forloop.last %}, {% endif %}
+            {% endfor %}
+            <br>dla {{ donation.institution.name }}</h2>
+    </section>
+
+    <section class="login-page">
+        <form method="POST">
+            {% csrf_token %}
+            <div class="form-group form-group--buttons">
+                <a href="{% url 'user-profile' %}" class="btn btn--admin">Anuluj</a>
+
+                <input type="submit" class="btn btn--admin" value="Potwierdź">
+            </div>
+        </form>
+    </section>
+
+{% endblock content %}

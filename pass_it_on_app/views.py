@@ -174,6 +174,21 @@ class DonationConfirmView(LoginRequiredMixin, View):
         return render(request, 'form-confirmation.html')
 
 
+class DonationConfirmReceivedView(LoginRequiredMixin, View):
+
+    def get(self, request, donation_id):
+        ctx = {
+            "donation": Donation.objects.get(id=donation_id)
+        }
+        return render(request, 'donation_confirm_received.html', ctx)
+
+    def post(self, request, donation_id):
+        donation = Donation.objects.get(id=donation_id)
+        donation.is_taken = True
+        donation.save()
+        return redirect('user-profile')
+
+
 class StaffRequiredMixin(LoginRequiredMixin, UserPassesTestMixin):
     """
     Custom mixin testing is user is staff
@@ -302,9 +317,9 @@ class UserProfileView(LoginRequiredMixin, View):
 
     def get(self, request):
         user = request.user
-        donations = Donation.objects.filter(user=user).order_by("-pick_up_date")
+        donations = Donation.objects.filter(user=user).order_by("is_taken", "-pick_up_date")
 
-        paginator = Paginator(donations, 10)
+        paginator = Paginator(donations, 20)
         # current page
         page_number = request.GET.get('page', 1)
         page_obj = paginator.get_page(page_number)
@@ -367,3 +382,5 @@ class InstitutionDeleteView(StaffRequiredMixin, DeleteView):
     template_name = 'institution_confirm_delete.html'
     pk_url_kwarg = 'institution_id'
     success_url = reverse_lazy('institution-list')
+
+

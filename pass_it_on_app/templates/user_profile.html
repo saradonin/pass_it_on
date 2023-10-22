@@ -27,31 +27,50 @@
                         <th>Instytucja</th>
                         <th>Kategorie</th>
                         <th>Data przekazania</th>
+                        <th>Status</th>
                         <th>Szczegóły</th>
                     </tr>
                     </thead>
                     <tbody>
                     {% for donation in page_obj %}
-                        <tr>
-                            <td>{{ donation.quantity }}</td>
-                            <td>{{ donation.institution.name }}</td>
-                            <td>
-                                {% for category in donation.categories.all %}
-                                    {{ category.name }}{% if not forloop.last %}, {% endif %}
-                                {% endfor %}
-                            </td>
-                            <td>{{ donation.pick_up_date|date:"Y-m-d" }}</td>
-                            <td><a href="" class="btn btn--without-border">Szczegóły</a></td>
-                            </td>
-                        </tr>
+                        {% if donation.is_taken %}
+                            <tr style="color:grey;">
+                                <td>{{ donation.quantity }}</td>
+                                <td>{{ donation.institution.name }}</td>
+                                <td>
+                                    {% for category in donation.categories.all %}
+                                        {{ category.name }}{% if not forloop.last %}, {% endif %}
+                                    {% endfor %}
+                                </td>
+                                <td>{{ donation.pick_up_date|date:"Y-m-d" }}</td>
+                                <td>Odebrane</td>
+                                <td><a href="">Szczegóły</a></td>
+                            </tr>
+                        {% else %}
+                            <tr>
+                                <td>{{ donation.quantity }}</td>
+                                <td>{{ donation.institution.name }}</td>
+                                <td>
+                                    {% for category in donation.categories.all %}
+                                        {{ category.name }}{% if not forloop.last %}, {% endif %}
+                                    {% endfor %}
+                                </td>
+                                <td>{{ donation.pick_up_date|date:"Y-m-d" }}</td>
+                                <td>
+                                    <a href="{% url 'donation-confirm-received' donation.id %}">Potwierdź odbiór</a>
+                                </td>
+                                <td><a href="">Szczegóły</a></td>
+                            </tr>
+                        {% endif %}
+
                     {% endfor %}
                     </tbody>
                 </table>
 
             {% endif %}
         </div>
-                {% include 'pagination.html' %}
-                {% block pagination %}{% endblock pagination %}
+        {% include 'pagination.html' %}
+        {% block pagination %}{% endblock pagination %}
     </section>
 
 

@@ -7,7 +7,7 @@
 
         {% for num in page_obj.paginator.page_range %}
             {% if num == page_obj.number %}
-                    <li class="btn btn--small btn--without-border active"><a>{{ num }}</a></li>
+                    <li class="btn btn--small btn--without-border active">{{ num }}</li>
             {% else %}
                 <li class="btn btn--small btn--without-border"><a href="?page={{ num }}">{{ num }}</a></li>
             {% endif %}
