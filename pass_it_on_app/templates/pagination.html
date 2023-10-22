@@ -1,0 +1,21 @@
+<nav aria-label="Page navigation">
+    <ul class="help--slides-pagination">
+        {% if page_obj.has_previous %}
+            <li class="btn btn--small btn--without-border"><a
+                href="?page={{ object_list.previous_page_number }}"><<</a></li>
+        {% endif %}
+
+        {% for num in page_obj.paginator.page_range %}
+            {% if num == page_obj.number %}
+                    <li class="btn btn--small btn--without-border active"><a>{{ num }}</a></li>
+            {% else %}
+                <li class="btn btn--small btn--without-border"><a href="?page={{ num }}">{{ num }}</a></li>
+            {% endif %}
+        {% endfor %}
+
+        {% if page_obj.has_next %}
+            <li class="btn btn--small btn--without-border"><a class=""
+                href="?page={{ page_obj.next_page_number }}">>></a></li>
+        {% endif %}
+    </ul>
+</nav>

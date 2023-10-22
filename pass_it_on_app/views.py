@@ -1,5 +1,6 @@
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
+from django.core.paginator import Paginator
 from django.shortcuts import render, redirect
 from django.urls import reverse_lazy
 from django.views import View
@@ -301,8 +302,15 @@ class UserProfileView(LoginRequiredMixin, View):
 
     def get(self, request):
         user = request.user
+        donations = Donation.objects.filter(user=user).order_by("-pick_up_date")
+
+        paginator = Paginator(donations, 10)
+        # current page
+        page_number = request.GET.get('page', 1)
+        page_obj = paginator.get_page(page_number)
+
         ctx = {
-            "donations": Donation.objects.filter(user=user).order_by("-pick_up_date")
+            'page_obj': page_obj,
         }
         return render(request, 'user_profile.html', ctx)
 

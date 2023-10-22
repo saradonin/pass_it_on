@@ -17,7 +17,7 @@
 
     <section>
         <div class="table-container">
-            {% if not donations %}
+            {% if not page_obj %}
                 <h1>Nie przekazałeś jeszcze żadnych darów</h1>
             {% else %}
                 <table class="table">
@@ -31,7 +31,7 @@
                     </tr>
                     </thead>
                     <tbody>
-                    {% for donation in donations %}
+                    {% for donation in page_obj %}
                         <tr>
                             <td>{{ donation.quantity }}</td>
                             <td>{{ donation.institution.name }}</td>
@@ -49,8 +49,10 @@
                 </table>
 
             {% endif %}
-
         </div>
+                {% include 'pagination.html' %}
+                {% block pagination %}{% endblock pagination %}
     </section>
+
 
 {% endblock content %}
