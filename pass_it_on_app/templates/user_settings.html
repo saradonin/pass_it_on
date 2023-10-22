@@ -1,0 +1,37 @@
+{% extends '__base__.html' %}
+{% block content %}
+<!-- //--------------------------- header -------------------------// -->
+<header>
+    {% include 'navbar.html' %}
+    {% block navbar %}{% endblock navbar %}
+</header>
+<!-- //--------------------------- header end ---------------------// -->
+    <section class="login-page">
+      <h2>Ustawienia</h2>
+      <form action="" method="POST">
+          {% csrf_token %}
+        <div class="form-group">
+          <input type="text" name="name" value="{{ current_user.first_name }}"/>
+            <h1 style="display: inline;">{{ name_msg }}</h1>
+        </div>
+         <div class="form-group">
+          <input type="text" name="surname" value="{{ current_user.last_name }}"/>
+             <h1 style="display: inline;">{{ surname_msg }}</h1>
+        </div>
+        <div class="form-group">
+          <input type="email" name="email" value="{{ current_user.email}}"/>
+            <h1 style="display: inline;">{{ email_msg }}</h1>
+        </div>
+        <div class="form-group">
+          <input type="password" name="password" placeholder="Hasło" />
+            <h1 style="display: inline;">{{ password_msg }}</h1>
+        </div>
+
+        <div class="form-group form-group--buttons">
+          <a href="{% url 'user-settings' %}" class="btn btn--without-border">Anuluj</a>
+          <button class="btn" type="submit">Zatwierdź zmiany</button>
+        </div>
+      </form>
+    </section>
+
+{% endblock content %}

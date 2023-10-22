@@ -5,7 +5,7 @@
             Witaj {{  current_user.first_name }}
             <ul class="dropdown">
                 <li><a href="{% url 'user-profile' %}">Profil</a></li>
-                <li><a href="#">Ustawienia</a></li>
+                <li><a href="{% url 'user-settings' %}">Ustawienia</a></li>
                 {% if current_user.is_staff %}
                     <li><a href="{% url 'admin-menu' %}">Administracja</a></li>
                 {% endif %}

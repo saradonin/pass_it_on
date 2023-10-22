@@ -310,6 +310,15 @@ class UserUpdateView(StaffRequiredMixin, View):
         return render(request, 'user_update_form.html', ctx)
 
 
+class UserSettingsView(LoginRequiredMixin, View):
+    """
+    View for displaying user settings.
+    """
+
+    def get(self, request):
+        return render(request, 'user_settings.html')
+
+
 class UserProfileView(LoginRequiredMixin, View):
     """
     View for displaying user profile.
