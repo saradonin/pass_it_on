@@ -20,7 +20,7 @@
             {% if not page_obj %}
                 <h1>Nie przekazałeś jeszcze żadnych darów</h1>
             {% else %}
-                <table class="table">
+                <table class="table table--details">
                     <thead>
                     <tr>
                         <th>Liczba worków</th>
@@ -59,7 +59,7 @@
                                 <td>
                                     <a href="{% url 'donation-confirm-received' donation.id %}">Potwierdź odbiór</a>
                                 </td>
-                                <td><a href="">Szczegóły</a></td>
+                                <td><a href="{% url 'donation-details' donation.id %}">Szczegóły</a></td>
                             </tr>
                         {% endif %}
 

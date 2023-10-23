@@ -1,0 +1,63 @@
+{% extends '__base__.html' %}
+{% block content %}
+    <!-- //--------------------------- header -------------------------// -->
+    <header>
+        {% include 'navbar.html' %}
+        {% block navbar %}{% endblock navbar %}
+    </header>
+    <!-- //--------------------------- header end ---------------------// -->
+    <section class="admin-menu">
+        <h2>Szczególy darowizny</h2>
+    </section>
+
+    <section>
+        <div class="table-container">
+            <table class="table table--details">
+                <thead>
+                <tbody>
+                <tr>
+                    <td class="details">Komu?</td>
+                    <td>{{ donation.institution.name }}</td>
+                </tr>
+                <tr>
+                    <td>Co?</td>
+                    <td>
+                        {% for category in donation.categories.all %}
+                            {{ category.name }}{% if not forloop.last %}, {% endif %}
+                        {% endfor %}
+                    </td>
+                </tr>
+                <tr>
+                    <td>Ile?</td>
+                    <td>{{ donation.quantity }}</td>
+                </tr>
+                <tr>
+                    <td>Kiedy?</td>
+                    <td>{{ donation.pick_up_date|date:"Y:m:d" }}</td>
+                </tr>
+                <tr>
+                    <td>Odebrano?</td>
+                    <td>{{ donation.is_taken|yesno:"Tak,Nie" }}</td>
+                </tr>
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </section>
+    <section class="login-page">
+        <div class="form-group form-group--buttons">
+            <a class="btn btn--without-border" href="{% url 'user-profile' %}">
+                Powrót
+            </a>
+            <a class="btn" href="{% url 'donation-confirm-received' donation.id %}">
+                Potwierdź odbiór
+            </a>
+        </div>
+    </section>
+
+
+
+{% endblock content %}

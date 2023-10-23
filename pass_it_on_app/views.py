@@ -176,7 +176,9 @@ class DonationConfirmView(LoginRequiredMixin, View):
 
 
 class DonationConfirmReceivedView(LoginRequiredMixin, View):
-
+    """
+    View for confirming the receiving of a donation.
+    """
     def get(self, request, donation_id):
         ctx = {
             "donation": Donation.objects.get(id=donation_id)
@@ -188,6 +190,17 @@ class DonationConfirmReceivedView(LoginRequiredMixin, View):
         donation.is_taken = True
         donation.save()
         return redirect('user-profile')
+
+
+class DonationDetailsView(LoginRequiredMixin, View):
+    """
+    View for displaying the donation details
+    """
+    def get(self, request, donation_id):
+        ctx = {
+            'donation': Donation.objects.get(id=donation_id)
+        }
+        return render(request, 'donation_details.html', ctx)
 
 
 class StaffRequiredMixin(LoginRequiredMixin, UserPassesTestMixin):
