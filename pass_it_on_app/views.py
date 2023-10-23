@@ -1,4 +1,5 @@
 from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.hashers import check_password
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.core.paginator import Paginator
 from django.shortcuts import render, redirect
@@ -318,6 +319,69 @@ class UserSettingsView(LoginRequiredMixin, View):
     def get(self, request):
         return render(request, 'user_settings.html')
 
+    def post(self, request):
+        user = request.user
+        name = request.POST.get('name')
+        surname = request.POST.get('surname')
+        email = request.POST.get('email')
+        password = request.POST.get('password')
+
+        # validation
+        ctx = {}
+        if not name:
+            ctx["name_msg"] = "Podaj imię"
+        if not surname:
+            ctx["surname_msg"] = "Podaj nazwisko"
+        if not email:
+            ctx["email_msg"] = "Podaj email"
+        if not password:
+            ctx["password_msg"] = "Podaj hasło aby zapisać zmiany"
+        elif not check_password(password, user.password):
+            ctx["password_msg"] = "Podane hasło jest nieprawidłowe"
+
+        if name and surname and email and not ctx.get("password_msg"):
+            user.first_name = name
+            user.last_name = surname
+            user.email = user.username = email
+            user.save()
+            return redirect('user-settings')
+
+        return render(request, 'user_settings.html', ctx)
+
+
+class UserPasswordChangeView(LoginRequiredMixin, View):
+    """
+    View for changing user password.
+    """
+    def get(self, request):
+        return render(request, 'user_change_password.html')
+
+    def post(self, request):
+        user = request.user
+        old_password = request.POST.get('old_password')
+        new_password = request.POST.get('new_password')
+        new_password2 = request.POST.get('new_password2')
+
+        # validation
+        ctx = {}
+        if not old_password:
+            ctx["old_password_msg"] = "Podaj swoje obecne hasło"
+        elif not check_password(old_password, user.password):
+            ctx["old_password_msg"] = "Podane hasło jest nieprawidłowe"
+        if not new_password:
+            ctx["new_password_msg"] = "Podaj nowe hasło"
+        if not new_password2:
+            ctx["new_password2_msg"] = "Powtórz nowe hasło"
+        elif new_password != new_password2:
+            ctx["new_password2_msg"] = "Hasła muszą być takie same"
+
+        if not ctx.get("old_password_msg") and not ctx.get("new_password_msg") and not ctx.get("new_password2_msg"):
+            user.set_password(new_password)
+            user.save()
+            return redirect('login')
+
+        return render(request, 'user_change_password.html', ctx)
+
 
 class UserProfileView(LoginRequiredMixin, View):
     """
@@ -391,5 +455,3 @@ class InstitutionDeleteView(StaffRequiredMixin, DeleteView):
     template_name = 'institution_confirm_delete.html'
     pk_url_kwarg = 'institution_id'
     success_url = reverse_lazy('institution-list')
-
-
