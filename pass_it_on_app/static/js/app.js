@@ -123,7 +123,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
             // Show items for the current page
             for (let i = startIndex; i < endIndex; i++) {
-                allItems[i].style.display = "block";
+                allItems[i].style.display = "flex";
             }
         }
 
