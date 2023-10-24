@@ -7,18 +7,13 @@ document.addEventListener("DOMContentLoaded", function () {
             this.$el = $el;
             this.$buttonsContainer = $el.querySelector(".help--buttons");
             this.$slidesContainers = $el.querySelectorAll(".help--slides");
-            this.currentSlide = this.$buttonsContainer.querySelector(".active").parentElement.dataset.id;
+            //    this.currentSlide = this.$buttonsContainer.querySelector(".active").parentElement.dataset.id;
             this.init();
         }
 
         init() {
-            if (!this.$buttonsContainer || !this.$slidesContainers.length) {
-                console.error("Required elements not found.");
-                return;
-            }
-
-            this.events();
             this.updatePagination();
+            this.events();
         }
 
         events() {
@@ -67,6 +62,16 @@ document.addEventListener("DOMContentLoaded", function () {
 
         generatePagination(itemsCount) {
             const totalPages = Math.ceil(itemsCount / ITEMS_PER_PAGE);
+
+            // Only 1 page or no pages
+            if (totalPages <= 1) {
+                const existingPaginationContainer = document.querySelector(".help--slides-pagination");
+                if (existingPaginationContainer) {
+                    existingPaginationContainer.remove();
+                }
+                return;
+            }
+
             const paginationContainer = document.createElement("ul");
             paginationContainer.classList.add("help--slides-pagination");
 
@@ -80,6 +85,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
                 if (i === 1) {
                     button.classList.add("active");
+                    this.showItemsForPage(i);
                 }
 
                 button.appendChild(link);
@@ -91,10 +97,13 @@ document.addEventListener("DOMContentLoaded", function () {
                     e.preventDefault();
                     const newPage = parseInt(e.target.dataset.page);
                     this.showItemsForPage(newPage);
+
+                    [...paginationContainer.children].forEach(btn => btn.classList.remove("active"));
+                    e.target.parentElement.classList.add("active");
                 }
             });
 
-            const existingPaginationContainer = document.querySelector(".help--slides-pagination");
+            const existingPaginationContainer = this.$el.querySelector(".help--slides-pagination");
             if (existingPaginationContainer) {
                 existingPaginationContainer.replaceWith(paginationContainer);
             } else {
@@ -107,8 +116,6 @@ document.addEventListener("DOMContentLoaded", function () {
             if (activeSlide) {
                 const itemsCount = activeSlide.querySelectorAll(".help--slides-items > li").length;
                 this.generatePagination(itemsCount);
-            } else {
-                console.error("Active slide not found.");
             }
         }
 
