@@ -7,7 +7,6 @@ document.addEventListener("DOMContentLoaded", function () {
             this.$el = $el;
             this.$buttonsContainer = $el.querySelector(".help--buttons");
             this.$slidesContainers = $el.querySelectorAll(".help--slides");
-            //    this.currentSlide = this.$buttonsContainer.querySelector(".active").parentElement.dataset.id;
             this.init();
         }
 
@@ -58,6 +57,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 const itemsCount = el.querySelectorAll(".help--slides-items > li").length;
                 this.generatePagination(itemsCount);
             });
+            this.updatePagination()
         }
 
         generatePagination(itemsCount) {
@@ -79,7 +79,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 const button = document.createElement("li");
                 button.classList.add("btn", "btn--small", "btn--without-border");
                 const link = document.createElement("a");
-                link.href = "#";
+                link.href = "#help";
                 link.textContent = i;
                 link.dataset.page = i;
 
@@ -120,15 +120,17 @@ document.addEventListener("DOMContentLoaded", function () {
         }
 
         showItemsForPage(pageNumber) {
-            // Hide all items
+            /**
+             * Hide all
+             */
             const allItems = document.querySelectorAll(".help--slides.active .help--slides-items > li");
             allItems.forEach(item => item.style.display = "none");
 
-            // Calculate start and end index for the items to display on the current page
             const startIndex = (pageNumber - 1) * ITEMS_PER_PAGE;
             const endIndex = Math.min(startIndex + ITEMS_PER_PAGE, allItems.length);
-
-            // Show items for the current page
+            /**
+             * Show current items
+             */
             for (let i = startIndex; i < endIndex; i++) {
                 allItems[i].style.display = "flex";
             }
@@ -137,12 +139,11 @@ document.addEventListener("DOMContentLoaded", function () {
         changePage(e) {
             e.preventDefault();
             const page = e.target.dataset.page;
-
             console.log(page);
         }
     }
 
-    const ITEMS_PER_PAGE = 2; // Number of items per page
+    const ITEMS_PER_PAGE = 5; // Number of items per page
     const helpSection = document.querySelector(".help");
     if (helpSection !== null) {
         new Help(helpSection);
