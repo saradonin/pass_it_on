@@ -12,7 +12,13 @@ document.addEventListener("DOMContentLoaded", function () {
         }
 
         init() {
+            if (!this.$buttonsContainer || !this.$slidesContainers.length) {
+                console.error("Required elements not found.");
+                return;
+            }
+
             this.events();
+            this.updatePagination();
         }
 
         events() {
@@ -53,12 +59,74 @@ document.addEventListener("DOMContentLoaded", function () {
                 if (el.dataset.id === this.currentSlide) {
                     el.classList.add("active");
                 }
+                // Generate pagination for the current slide
+                const itemsCount = el.querySelectorAll(".help--slides-items > li").length;
+                this.generatePagination(itemsCount);
             });
         }
 
-        /**
-         * TODO: callback to page change event
-         */
+        generatePagination(itemsCount) {
+            const totalPages = Math.ceil(itemsCount / ITEMS_PER_PAGE);
+            const paginationContainer = document.createElement("ul");
+            paginationContainer.classList.add("help--slides-pagination");
+
+            for (let i = 1; i <= totalPages; i++) {
+                const button = document.createElement("li");
+                button.classList.add("btn", "btn--small", "btn--without-border");
+                const link = document.createElement("a");
+                link.href = "#";
+                link.textContent = i;
+                link.dataset.page = i;
+
+                if (i === 1) {
+                    button.classList.add("active");
+                }
+
+                button.appendChild(link);
+                paginationContainer.appendChild(button);
+
+            }
+            paginationContainer.addEventListener("click", (e) => {
+                if (e.target.tagName === "A") {
+                    e.preventDefault();
+                    const newPage = parseInt(e.target.dataset.page);
+                    this.showItemsForPage(newPage);
+                }
+            });
+
+            const existingPaginationContainer = document.querySelector(".help--slides-pagination");
+            if (existingPaginationContainer) {
+                existingPaginationContainer.replaceWith(paginationContainer);
+            } else {
+                this.$el.appendChild(paginationContainer);
+            }
+        }
+
+        updatePagination() {
+            const activeSlide = this.$el.querySelector(".help--slides.active");
+            if (activeSlide) {
+                const itemsCount = activeSlide.querySelectorAll(".help--slides-items > li").length;
+                this.generatePagination(itemsCount);
+            } else {
+                console.error("Active slide not found.");
+            }
+        }
+
+        showItemsForPage(pageNumber) {
+            // Hide all items
+            const allItems = document.querySelectorAll(".help--slides.active .help--slides-items > li");
+            allItems.forEach(item => item.style.display = "none");
+
+            // Calculate start and end index for the items to display on the current page
+            const startIndex = (pageNumber - 1) * ITEMS_PER_PAGE;
+            const endIndex = Math.min(startIndex + ITEMS_PER_PAGE, allItems.length);
+
+            // Show items for the current page
+            for (let i = startIndex; i < endIndex; i++) {
+                allItems[i].style.display = "block";
+            }
+        }
+
         changePage(e) {
             e.preventDefault();
             const page = e.target.dataset.page;
@@ -67,6 +135,7 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     }
 
+    const ITEMS_PER_PAGE = 2; // Number of items per page
     const helpSection = document.querySelector(".help");
     if (helpSection !== null) {
         new Help(helpSection);
@@ -348,7 +417,7 @@ document.addEventListener("DOMContentLoaded", function () {
             } else {
                 this.$summaryInfo.textContent = this.$pickupInfo.value
             }
-                // Dynamically set the 'min' attribute for the date input
+            // Dynamically set the 'min' attribute for the date input
 
             const today = new Date().toISOString().split('T')[0];
             this.$pickupDate.setAttribute("min", today);
