@@ -40,7 +40,13 @@ def validate_user_data(name, surname, email):
         errors["surname_msg"] = "Podaj nazwisko"
     if not email:
         errors["email_msg"] = "Podaj email"
-    elif User.objects.filter(email=email):
+
+    return errors
+
+
+def validate_email_unique(email):
+    errors = {}
+    if User.objects.filter(email=email):
         errors["email_msg"] = "Podany adres email jest zajety"
 
     return errors

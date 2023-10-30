@@ -8,7 +8,7 @@ from django.views import View
 from django.views.generic import ListView, UpdateView, CreateView, DeleteView
 
 from pass_it_on_app.models import Institution, Donation, User, Category
-from pass_it_on_app.validators import validate_user_data, validate_password
+from pass_it_on_app.validators import validate_user_data, validate_password, validate_email_unique
 
 
 class IndexView(View):
@@ -88,8 +88,9 @@ class UserRegisterView(View):
 
         # validation
         user_data_errors = validate_user_data(name, surname, email)
+        user_unique_errors = validate_email_unique(email)
         password_errors = validate_password(password, password2)
-        ctx = {**user_data_errors, **password_errors}
+        ctx = {**user_data_errors, **user_unique_errors, **password_errors}
 
         if not ctx:
             User.objects.create_user(
@@ -249,8 +250,9 @@ class UserAddView(StaffRequiredMixin, View):
 
         # validation
         user_data_errors = validate_user_data(name, surname, email)
+        user_unique_errors = validate_email_unique(email)
         password_errors = validate_password(password, password2)
-        ctx = {**user_data_errors, **password_errors}
+        ctx = {**user_data_errors, **user_unique_errors, **password_errors}
 
         if not ctx:
             User.objects.create_user(
