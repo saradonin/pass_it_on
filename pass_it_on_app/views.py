@@ -8,6 +8,7 @@ from django.views import View
 from django.views.generic import ListView, UpdateView, CreateView, DeleteView
 
 from pass_it_on_app.models import Institution, Donation, User, Category
+from pass_it_on_app.validators import validate_user_data, validate_password
 
 
 class IndexView(View):
@@ -84,22 +85,13 @@ class UserRegisterView(View):
         email = request.POST.get('email')
         password = request.POST.get('password')
         password2 = request.POST.get('password2')
-        # validation
-        ctx = {}
-        if not name:
-            ctx["name_msg"] = "Podaj imię"
-        if not surname:
-            ctx["surname_msg"] = "Podaj nazwisko"
-        if not email:
-            ctx["email_msg"] = "Podaj email"
-        if not password:
-            ctx["password_msg"] = "Podaj hasło"
-        elif len(password) < 8:
-            ctx["password_msg"] = "Hasło musi zawierać co najmniej 8 znaków"
-        if not password2 or password != password2:
-            ctx["password2_msg"] = "Hasła muszą być takie same"
 
-        if name and surname and email and password and password2:
+        # validation
+        user_data_errors = validate_user_data(name, surname, email)
+        password_errors = validate_password(password, password2)
+        ctx = {**user_data_errors, **password_errors}
+
+        if not ctx:
             User.objects.create_user(
                 username=email,
                 first_name=name,
@@ -254,21 +246,11 @@ class UserAddView(StaffRequiredMixin, View):
         is_staff = True if request.POST.get('is_staff') else False
 
         # validation
-        ctx = {}
-        if not name:
-            ctx["name_msg"] = "Podaj imię"
-        if not surname:
-            ctx["surname_msg"] = "Podaj nazwisko"
-        if not email:
-            ctx["email_msg"] = "Podaj email"
-        if not password:
-            ctx["password_msg"] = "Podaj hasło"
-        elif len(password) < 8:
-            ctx["password_msg"] = "Hasło musi zawierać co najmniej 8 znaków"
-        if not password2 or password != password2:
-            ctx["password2_msg"] = "Hasła muszą być takie same"
+        user_data_errors = validate_user_data(name, surname, email)
+        password_errors = validate_password(password, password2)
+        ctx = {**user_data_errors, **password_errors}
 
-        if name and surname and email and password and password2:
+        if not ctx:
             User.objects.create_user(
                 username=email,
                 first_name=name,
@@ -304,15 +286,9 @@ class UserUpdateView(StaffRequiredMixin, View):
         is_staff = True if request.POST.get('is_staff') else False
 
         # validation
-        ctx = {}
-        if not name:
-            ctx["name_msg"] = "Podaj imię"
-        if not surname:
-            ctx["surname_msg"] = "Podaj nazwisko"
-        if not email:
-            ctx["email_msg"] = "Podaj email"
+        ctx = validate_user_data(name, surname, email)
 
-        if name and surname and email:
+        if not ctx:
             user.first_name = name
             user.last_name = surname
             user.username = user.email = email
@@ -340,19 +316,13 @@ class UserSettingsView(LoginRequiredMixin, View):
         password = request.POST.get('password')
 
         # validation
-        ctx = {}
-        if not name:
-            ctx["name_msg"] = "Podaj imię"
-        if not surname:
-            ctx["surname_msg"] = "Podaj nazwisko"
-        if not email:
-            ctx["email_msg"] = "Podaj email"
+        ctx = validate_user_data(name, surname, email)
         if not password:
             ctx["password_msg"] = "Podaj hasło aby zapisać zmiany"
         elif not check_password(password, user.password):
             ctx["password_msg"] = "Podane hasło jest nieprawidłowe"
 
-        if name and surname and email and not ctx.get("password_msg"):
+        if not ctx:
             user.first_name = name
             user.last_name = surname
             user.email = user.username = email
