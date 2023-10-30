@@ -1,6 +1,6 @@
 import re
 
-from pass_it_on_app.models import User
+from donations.models import User
 
 
 def validate_password(password, password2):

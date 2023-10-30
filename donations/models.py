@@ -1,8 +1,7 @@
-from django.contrib.auth import get_user_model
 from django.core.validators import RegexValidator
 from django.db import models
 
-User = get_user_model()
+from accounts.models import User
 
 
 class Category(models.Model):
@@ -64,3 +63,4 @@ class Donation(models.Model):
     pick_up_comment = models.TextField(null=True)
     user = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, default=None)
     is_taken = models.BooleanField(default=False)
+
