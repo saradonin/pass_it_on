@@ -17,10 +17,11 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 
-from pass_it_on_app.views import IndexView, UserLoginView, UserRegisterView, DonationAddView, UserLogoutView, \
-    DonationConfirmView, AdminMenuView, UserListView, InstitutionListView, InstitutionUpdateView, InstitutionAddView, \
-    UserAddView, UserUpdateView, InstitutionDeleteView, UserDeleteView, UserProfileView, DonationConfirmReceivedView, \
-    UserSettingsView, UserPasswordChangeView, DonationDetailsView
+from accounts.views import UserLoginView, UserLogoutView, UserRegisterView, AdminMenuView, UserListView, UserAddView, \
+    UserUpdateView, UserDeleteView, UserProfileView, UserSettingsView, UserPasswordChangeView, InstitutionListView, \
+    InstitutionAddView, InstitutionUpdateView, InstitutionDeleteView
+from donations.views import IndexView, DonationAddView, DonationConfirmView, DonationConfirmReceivedView, \
+    DonationDetailsView
 
 urlpatterns = [
     path('admin/', admin.site.urls),
