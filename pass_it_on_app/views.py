@@ -171,6 +171,7 @@ class DonationConfirmReceivedView(LoginRequiredMixin, View):
     """
     View for confirming the receiving of a donation.
     """
+
     def get(self, request, donation_id):
         ctx = {
             "donation": Donation.objects.get(id=donation_id)
@@ -188,6 +189,7 @@ class DonationDetailsView(LoginRequiredMixin, View):
     """
     View for displaying the donation details
     """
+
     def get(self, request, donation_id):
         ctx = {
             'donation': Donation.objects.get(id=donation_id)
@@ -336,6 +338,7 @@ class UserPasswordChangeView(LoginRequiredMixin, View):
     """
     View for changing user password.
     """
+
     def get(self, request):
         return render(request, 'user_change_password.html')
 
@@ -346,19 +349,13 @@ class UserPasswordChangeView(LoginRequiredMixin, View):
         new_password2 = request.POST.get('new_password2')
 
         # validation
-        ctx = {}
+        ctx = validate_password(new_password, new_password2)
         if not old_password:
             ctx["old_password_msg"] = "Podaj swoje obecne hasło"
         elif not check_password(old_password, user.password):
             ctx["old_password_msg"] = "Podane hasło jest nieprawidłowe"
-        if not new_password:
-            ctx["new_password_msg"] = "Podaj nowe hasło"
-        if not new_password2:
-            ctx["new_password2_msg"] = "Powtórz nowe hasło"
-        elif new_password != new_password2:
-            ctx["new_password2_msg"] = "Hasła muszą być takie same"
 
-        if not ctx.get("old_password_msg") and not ctx.get("new_password_msg") and not ctx.get("new_password2_msg"):
+        if not ctx:
             user.set_password(new_password)
             user.save()
             return redirect('login')
