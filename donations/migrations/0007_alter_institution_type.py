@@ -6,7 +6,7 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('pass_it_on_app', '0006_alter_institution_type'),
+        ('donations', '0006_alter_institution_type'),
     ]
 
     operations = [
