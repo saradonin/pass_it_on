@@ -9,7 +9,7 @@ class Migration(migrations.Migration):
 
     dependencies = [
         migrations.swappable_dependency(settings.AUTH_USER_MODEL),
-        ('pass_it_on_app', '0002_institution'),
+        ('donations', '0002_institution'),
     ]
 
     operations = [
@@ -25,8 +25,8 @@ class Migration(migrations.Migration):
                 ('pick_up_date', models.DateField()),
                 ('pick_up_time', models.TimeField()),
                 ('pick_up_comment', models.TextField()),
-                ('categories', models.ManyToManyField(to='pass_it_on_app.category')),
-                ('institution', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='pass_it_on_app.institution')),
+                ('categories', models.ManyToManyField(to='donations.category')),
+                ('institution', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='donations.institution')),
                 ('user', models.ForeignKey(default=None, null=True, on_delete=django.db.models.deletion.SET_NULL, to=settings.AUTH_USER_MODEL)),
             ],
         ),

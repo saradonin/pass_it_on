@@ -6,7 +6,7 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('pass_it_on_app', '0001_initial'),
+        ('donations', '0001_initial'),
     ]
 
     operations = [
@@ -17,7 +17,7 @@ class Migration(migrations.Migration):
                 ('name', models.CharField(max_length=255, unique=True)),
                 ('description', models.TextField(null=True)),
                 ('type', models.CharField(choices=[(1, 'fundacja'), (2, 'organizacja pozarządowa'), (3, 'zbiórka lokalna')], default=1, max_length=64)),
-                ('categories', models.ManyToManyField(to='pass_it_on_app.category')),
+                ('categories', models.ManyToManyField(to='donations.category')),
             ],
         ),
     ]
