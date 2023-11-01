@@ -133,6 +133,85 @@ class UserConfirmRegistrationView(View):
             }
             return render(request, 'user_register_message.html', ctx)
     
+class UserSettingsView(LoginRequiredMixin, View):
+    """
+    View for displaying user settings.
+    """
+
+    def get(self, request):
+        return render(request, 'user_settings.html')
+
+    def post(self, request):
+        user = request.user
+        name = request.POST.get('name')
+        surname = request.POST.get('surname')
+        email = request.POST.get('email')
+        password = request.POST.get('password')
+
+        # validation
+        ctx = validate_user_data(name, surname, email)
+        if not password:
+            ctx["password_msg"] = "Podaj hasło aby zapisać zmiany"
+        elif not check_password(password, user.password):
+            ctx["password_msg"] = "Podane hasło jest nieprawidłowe"
+
+        if not ctx:
+            user.first_name = name
+            user.last_name = surname
+            user.email = user.username = email
+            user.save()
+            return redirect('user-settings')
+
+        return render(request, 'user_settings.html', ctx)
+
+
+class UserPasswordChangeView(LoginRequiredMixin, View):
+    """
+    View for changing user password.
+    """
+
+    def get(self, request):
+        return render(request, 'user_change_password.html')
+
+    def post(self, request):
+        user = request.user
+        old_password = request.POST.get('old_password')
+        new_password = request.POST.get('new_password')
+        new_password2 = request.POST.get('new_password2')
+
+        # validation
+        ctx = validate_password(new_password, new_password2)
+        if not old_password:
+            ctx["old_password_msg"] = "Podaj swoje obecne hasło"
+        elif not check_password(old_password, user.password):
+            ctx["old_password_msg"] = "Podane hasło jest nieprawidłowe"
+
+        if not ctx:
+            user.set_password(new_password)
+            user.save()
+            return redirect('login')
+
+        return render(request, 'user_change_password.html', ctx)
+
+
+class UserProfileView(LoginRequiredMixin, View):
+    """
+    View for displaying user profile.
+    """
+
+    def get(self, request):
+        user = request.user
+        donations = Donation.objects.filter(user=user).order_by("is_taken", "-pick_up_date")
+
+        paginator = Paginator(donations, 20)
+        # current page
+        page_number = request.GET.get('page', 1)
+        page_obj = paginator.get_page(page_number)
+
+        ctx = {
+            'page_obj': page_obj,
+        }
+        return render(request, 'user_profile.html', ctx)
 
 class AdminMenuView(StaffRequiredMixin, View):
     """
@@ -229,87 +308,6 @@ class UserUpdateView(StaffRequiredMixin, View):
             return redirect('user-list')
 
         return render(request, 'user_update_form.html', ctx)
-
-
-class UserSettingsView(LoginRequiredMixin, View):
-    """
-    View for displaying user settings.
-    """
-
-    def get(self, request):
-        return render(request, 'user_settings.html')
-
-    def post(self, request):
-        user = request.user
-        name = request.POST.get('name')
-        surname = request.POST.get('surname')
-        email = request.POST.get('email')
-        password = request.POST.get('password')
-
-        # validation
-        ctx = validate_user_data(name, surname, email)
-        if not password:
-            ctx["password_msg"] = "Podaj hasło aby zapisać zmiany"
-        elif not check_password(password, user.password):
-            ctx["password_msg"] = "Podane hasło jest nieprawidłowe"
-
-        if not ctx:
-            user.first_name = name
-            user.last_name = surname
-            user.email = user.username = email
-            user.save()
-            return redirect('user-settings')
-
-        return render(request, 'user_settings.html', ctx)
-
-
-class UserPasswordChangeView(LoginRequiredMixin, View):
-    """
-    View for changing user password.
-    """
-
-    def get(self, request):
-        return render(request, 'user_change_password.html')
-
-    def post(self, request):
-        user = request.user
-        old_password = request.POST.get('old_password')
-        new_password = request.POST.get('new_password')
-        new_password2 = request.POST.get('new_password2')
-
-        # validation
-        ctx = validate_password(new_password, new_password2)
-        if not old_password:
-            ctx["old_password_msg"] = "Podaj swoje obecne hasło"
-        elif not check_password(old_password, user.password):
-            ctx["old_password_msg"] = "Podane hasło jest nieprawidłowe"
-
-        if not ctx:
-            user.set_password(new_password)
-            user.save()
-            return redirect('login')
-
-        return render(request, 'user_change_password.html', ctx)
-
-
-class UserProfileView(LoginRequiredMixin, View):
-    """
-    View for displaying user profile.
-    """
-
-    def get(self, request):
-        user = request.user
-        donations = Donation.objects.filter(user=user).order_by("is_taken", "-pick_up_date")
-
-        paginator = Paginator(donations, 20)
-        # current page
-        page_number = request.GET.get('page', 1)
-        page_obj = paginator.get_page(page_number)
-
-        ctx = {
-            'page_obj': page_obj,
-        }
-        return render(request, 'user_profile.html', ctx)
 
 
 class UserDeleteView(StaffRequiredMixin, DeleteView):
