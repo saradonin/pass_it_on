@@ -17,7 +17,7 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 
-from accounts.views import UserConfirmRegistrationView, UserLoginView, UserLogoutView, UserRegisterView, AdminMenuView, UserListView, UserAddView, \
+from accounts.views import UserConfirmRegistrationView, UserLoginView, UserLogoutView, UserPasswordResetView, UserPasswordSendEmailView, UserRegisterView, AdminMenuView, UserListView, UserAddView, \
     UserUpdateView, UserDeleteView, UserProfileView, UserSettingsView, UserPasswordChangeView, InstitutionListView, \
     InstitutionAddView, InstitutionUpdateView, InstitutionDeleteView
 from donations.views import IndexView, DonationAddView, DonationConfirmView, DonationConfirmReceivedView, \
@@ -31,6 +31,10 @@ urlpatterns = [
     path('logout/', UserLogoutView.as_view(), name="logout"),
     path('register/', UserRegisterView.as_view(), name="register"),
     path('confirm/<str:token>/', UserConfirmRegistrationView.as_view(), name="confirm-registration"),
+    path('settings/', UserSettingsView.as_view(), name="user-settings"),
+    path('change-password/', UserPasswordChangeView.as_view(), name="user-password"),
+    path('reset-password/', UserPasswordSendEmailView.as_view(), name="password-reset-email"),
+    path('new-password/<str:token>/', UserPasswordResetView.as_view(), name="new-password"),
 
     path('donate/', DonationAddView.as_view(), name="donation-add"),
     path('donation/confirmed/', DonationConfirmView.as_view(), name="donation-confirmation"),
@@ -44,8 +48,6 @@ urlpatterns = [
     path('user/update/<int:user_id>', UserUpdateView.as_view(), name="user-update"),
     path('user/delete/<int:user_id>', UserDeleteView.as_view(), name="user-delete"),
     path('user/', UserProfileView.as_view(), name="user-profile"),
-    path('settings/', UserSettingsView.as_view(), name="user-settings"),
-    path('change-password/', UserPasswordChangeView.as_view(), name="user-password"),
 
     path('institutions/', InstitutionListView.as_view(), name="institution-list"),
     path('institution/add/', InstitutionAddView.as_view(), name="institution-add"),
