@@ -71,19 +71,27 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'pass_it_on.wsgi.application'
 
-# Database
-# https://docs.djangoproject.com/en/4.2/ref/settings/#databases
-
-DATABASES = {
-    'default': {
-        'HOST': '127.0.0.1',
-        'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'charity-donation',
-        'USER': 'postgres',
-        'PASSWORD': 'coderslab',
-    }
-}
-
+# Databases
+try:
+    from pass_it_on._local_settings import DATABASES
+except ModuleNotFoundError:
+    print("Databases settings not found!")
+    exit(0)
+    
+# Email settings
+try:
+    from pass_it_on._local_settings import EMAIL_HOST, EMAIL_HOST_USER, EMAIL_HOST_PASSWORD, EMAIL_PORT
+    EMAIL_USE_TLS = True
+    EMAIL_HOST = EMAIL_HOST
+    EMAIL_HOST_USER = EMAIL_HOST_USER
+    EMAIL_HOST_PASSWORD = EMAIL_HOST_PASSWORD
+    EMAIL_PORT = EMAIL_PORT
+except ModuleNotFoundError:
+    print("Email settings not found!")
+    exit(0)
+    
+BASE_URL = "localhost:8000"
+    
 # Password validation
 # https://docs.djangoproject.com/en/4.2/ref/settings/#auth-password-validators
 
