@@ -1,7 +1,0 @@
-{% autoescape off %}
-Cześć {{ user.first_name }} {{ user.last_name }},
-Kliknij w poniższy link aby dokończyć rejestrację konta: 
-http://{{ domain }}{% url 'confirm-registration' confirmation_token %}
-
-{% endautoescape %}
-
