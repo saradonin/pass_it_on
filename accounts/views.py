@@ -1,13 +1,17 @@
+import uuid
 from django.contrib.auth import login, authenticate, logout
 from django.contrib.auth.hashers import check_password
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.core.paginator import Paginator
+from django.core.mail import send_mail
+from django.conf import settings
 from django.shortcuts import render, redirect
+from django.template.loader import render_to_string
 from django.urls import reverse_lazy
 from django.views import View
 from django.views.generic import DeleteView, CreateView, UpdateView, ListView
 
-from accounts.models import User
+from accounts.models import User, Token
 from accounts.validators import validate_password, validate_user_data, validate_email_unique
 from donations.models import Donation, Institution
 
@@ -75,17 +79,60 @@ class UserRegisterView(View):
         ctx = {**user_data_errors, **user_unique_errors, **password_errors}
 
         if not ctx:
-            User.objects.create_user(
+            confirmation_token = str(uuid.uuid4())
+            user = User.objects.create_user(
                 username=email,
                 first_name=name,
                 last_name=surname,
                 email=email,
-                password=password
+                password=password,
+                is_active=False,
             )
-            return redirect('login')
+            Token.objects.create(user=user, token=confirmation_token)
+            
+            # sending email
+            domain = f"{settings.BASE_URL}"
+            email_subject = "Aktywacja konta"
+            # email_message = f"Kliknij w poniższy link aby dokończyć rejestrację konta \n {confirmation_link}"
+            
+            email_message = render_to_string('user_register_confirmation_email.html', {
+                'user': user,
+                'domain': domain,
+                'confirmation_token': confirmation_token
+            })
+            send_mail(email_subject, email_message, settings.EMAIL_HOST_USER, [email])
+            
+            ctx = {
+                'message': "Dziękujemy za rejestrację konta. Na wskazany adres email został wysłany link aktywacyjny."
+            }
+            return render(request, 'user_register_message.html', ctx)
 
         return render(request, 'user_register.html', ctx)
+    
 
+class UserConfirmRegistrationView(View):
+    """
+    View for confirming registration
+    """
+    
+    def get(self, request, token):
+        logout(request)
+        try:
+            token = Token.objects.get(token=token)
+            user = token.user
+            user.is_active = True
+            token.delete()
+            user.save()
+            ctx = {
+                'message': "Twoje konto zostało aktywowane. Możesz się teraz zalogować."
+            }
+            return render(request, 'user_register_message.html', ctx)
+        except Token.DoesNotExist:
+            ctx = {
+                'message': "Link aktywacyjny jest nieprawidłowy lub został już wykorzystany"
+            }
+            return render(request, 'user_register_message.html', ctx)
+    
 
 class AdminMenuView(StaffRequiredMixin, View):
     """
