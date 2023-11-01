@@ -128,7 +128,7 @@ class UserConfirmRegistrationView(View):
             user = token_instance.user 
             
             if token_instance.date_created < datetime.now() - timedelta(days=1):
-                if user.date_joined == token_instance.date_created:
+                if user.is_active == False and user.date_joined == token_instance.date_created:
                     user.delete()
                 
                 token_instance.delete()
