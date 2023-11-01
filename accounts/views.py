@@ -9,6 +9,7 @@ from django.conf import settings
 from django.shortcuts import render, redirect
 from django.template.loader import render_to_string
 from django.urls import reverse_lazy
+from django.utils import timezone
 from django.views import View
 from django.views.generic import DeleteView, CreateView, UpdateView, ListView
 
@@ -96,15 +97,9 @@ class UserRegisterView(View):
             Token.objects.create(user=user, token=confirmation_token)
 
             # sending email
-            domain = f"{settings.BASE_URL}"
+            confirmation_link = f"{settings.BASE_URL}/confirm/{confirmation_token}"
             email_subject = "Aktywacja konta"
-            # email_message = f"Kliknij w poniższy link aby dokończyć rejestrację konta \n {confirmation_link}"
-
-            email_message = render_to_string('user_register_confirmation_email.html', {
-                'user': user,
-                'domain': domain,
-                'confirmation_token': confirmation_token
-            })
+            email_message = f"Cześć {user.first_name}, \n Kliknij poniższy link aby dokończyć rejestrację \n {confirmation_link}"
             send_mail(email_subject, email_message,
                       settings.EMAIL_HOST_USER, [email])
 
@@ -125,12 +120,12 @@ class UserConfirmRegistrationView(View):
         logout(request)
         try:
             token_instance = Token.objects.get(token=token)
-            user = token_instance.user 
-            
-            if token_instance.date_created < datetime.now() - timedelta(days=1):
+            one_day_ago = timezone.now() - timedelta(days=1)
+
+            if token_instance.date_created < one_day_ago:
                 if user.is_active == False and user.date_joined == token_instance.date_created:
                     user.delete()
-                
+
                 token_instance.delete()
                 ctx = {
                     'message': "Link aktywacyjny wygasł. Prosimy o ponowną rejestrację."
@@ -180,6 +175,80 @@ class UserSettingsView(LoginRequiredMixin, View):
             return redirect('user-settings')
 
         return render(request, 'user_settings.html', ctx)
+
+
+class UserPasswordSendEmailView(View):
+    """
+    View for sending password reset email
+    """
+
+    def get(self, request):
+        return render(request, 'user_password_reset_email.html')
+
+    def post(self, request):
+        email = request.POST.get('email')
+
+        if not User.objects.filter(email=email).exists():
+            ctx = {
+                'message': "Konto powiązane z tym adresem email nie istnieje."
+            }
+            return render(request, 'user_password_reset_email.html', ctx)
+        else:
+            password_reset_token = str(uuid.uuid4())
+            user = User.objects.get(email=email)
+            Token.objects.create(user=user, token=password_reset_token)
+
+            # sending email
+            email_subject = "Odzyskiwanie hasła"
+            reset_link = f"{settings.BASE_URL}/new-password/{password_reset_token}"
+            email_message = f"Cześć {user.first_name}, \n Kliknij w poniższy link aby ustawić nowe hasło \n {reset_link}"
+
+            send_mail(email_subject, email_message,
+                      settings.EMAIL_HOST_USER, [email])
+
+            ctx = {
+                'message': "Na wskazany adres email wysłaliśmy link do zmiany hasła."
+            }
+            return render(request, 'user_register_message.html', ctx)
+
+
+class UserPasswordResetView(View):
+    """
+    View for setting up new password
+    """
+
+    def get(self, request, token):
+        try:
+            token_instance = Token.objects.get(token=token)
+            one_day_ago = timezone.now() - timedelta(days=1)
+            
+            if token_instance.date_created < one_day_ago:
+                ctx = {
+                'message': "Link do zmiany hasła wygasł."
+                }
+                token_instance.delete()
+                return render(request, 'user_register_message.html', ctx)
+            return render(request, 'user_password_reset.html')
+   
+        except Token.DoesNotExist:
+            ctx = {
+                'message': "Link do zmiany hasła jest nieprawidłowy lub został już wykorzystany"
+            }
+            return render(request, 'user_register_message.html', ctx)
+
+    def post(self, request, token):
+        token_instance = Token.objects.get(token=token)
+        new_password = request.POST.get('new_password')
+        new_password2 = request.POST.get('new_password2')
+        ctx = validate_password(new_password, new_password2)
+
+        if not ctx:
+            user = token_instance.user
+            user.set_password(new_password)
+            user.save()
+            token_instance.delete()
+            return redirect('login')
+        return render(request, 'user_password_reset.html', ctx)
 
 
 class UserPasswordChangeView(LoginRequiredMixin, View):
