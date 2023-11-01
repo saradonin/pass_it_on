@@ -6,6 +6,7 @@ from django.core.paginator import Paginator
 from django.core.mail import send_mail
 from django.conf import settings
 from django.shortcuts import render, redirect
+from django.template.loader import render_to_string
 from django.urls import reverse_lazy
 from django.views import View
 from django.views.generic import DeleteView, CreateView, UpdateView, ListView
@@ -89,14 +90,20 @@ class UserRegisterView(View):
             )
             Token.objects.create(user=user, token=confirmation_token)
             
-            # TODO sending email
-            confirmation_link = f"{settings.BASE_URL}/confirm/{confirmation_token}"
+            # sending email
+            domain = f"{settings.BASE_URL}"
             email_subject = "Aktywacja konta"
-            email_message = f"Kliknij w poniższy link aby dokończyć rejestrację konta {confirmation_link}"
+            # email_message = f"Kliknij w poniższy link aby dokończyć rejestrację konta \n {confirmation_link}"
+            
+            email_message = render_to_string('user_register_confirmation_email.html', {
+                'user': user,
+                'domain': domain,
+                'confirmation_token': confirmation_token
+            })
             send_mail(email_subject, email_message, settings.EMAIL_HOST_USER, [email])
             
             ctx = {
-                'message': "Dziękujemy za rejestrację konta. Na wskazany adres email został wysłany link do aktywacji konta."
+                'message': "Dziękujemy za rejestrację konta. Na wskazany adres email został wysłany link aktywacyjny."
             }
             return render(request, 'user_register_message.html', ctx)
 
@@ -109,6 +116,7 @@ class UserConfirmRegistrationView(View):
     """
     
     def get(self, request, token):
+        logout(request)
         try:
             token = Token.objects.get(token=token)
             user = token.user
@@ -119,12 +127,11 @@ class UserConfirmRegistrationView(View):
                 'message': "Twoje konto zostało aktywowane. Możesz się teraz zalogować."
             }
             return render(request, 'user_register_message.html', ctx)
-        except User.DoesNotExist:
+        except Token.DoesNotExist:
             ctx = {
-                'message': "Link aktywacyjny jest nieprawidłowy"
+                'message': "Link aktywacyjny jest nieprawidłowy lub został już wykorzystany"
             }
             return render(request, 'user_register_message.html', ctx)
-
     
 
 class AdminMenuView(StaffRequiredMixin, View):
