@@ -461,3 +461,28 @@ class InstitutionDeleteView(StaffRequiredMixin, DeleteView):
     template_name = 'institution_confirm_delete.html'
     pk_url_kwarg = 'institution_id'
     success_url = reverse_lazy('institution-list')
+
+
+class ContactFormView(View):
+    """
+    View for handling contact form.
+    """
+
+    def post(self, request):
+        name = request.POST.get('name')
+        surname = request.POST.get('surname')
+        message = request.POST.get('message')
+
+        if name and surname and message:
+            email_subject = f"Wiadomość od {name} {surname}"
+            email_message = f"{name} {surname} przesłał wiadomość o następującej treści: \n {message}"
+            email_list = [
+                user.email for user in User.objects.filter(is_staff=True)]
+
+            send_mail(email_subject, email_message,
+                      settings.EMAIL_HOST_USER, email_list)
+
+            ctx = {
+                'message': "Twoja wiadomość została wysłana. Dziękujemy za kontakt."
+            }
+            return render(request, 'user_register_message.html', ctx)
