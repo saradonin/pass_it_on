@@ -1,4 +1,4 @@
-from datetime import datetime, timedelta
+from datetime import timedelta
 import uuid
 from django.contrib.auth import login, authenticate, logout
 from django.contrib.auth.hashers import check_password
@@ -7,7 +7,6 @@ from django.core.paginator import Paginator
 from django.core.mail import send_mail
 from django.conf import settings
 from django.shortcuts import render, redirect
-from django.template.loader import render_to_string
 from django.urls import reverse_lazy
 from django.utils import timezone
 from django.views import View
@@ -42,7 +41,7 @@ class UserLoginView(View):
         user = authenticate(username=username, password=password)
         if user is None:
             return redirect('register')
-        elif user.is_active == False:
+        elif user.is_active is False:
             ctx = {
                 'message': "Twoje konto nie zostało aktywowane. Sprawdź email."
             }
@@ -121,9 +120,10 @@ class UserConfirmRegistrationView(View):
         try:
             token_instance = Token.objects.get(token=token)
             one_day_ago = timezone.now() - timedelta(days=1)
+            user = token_instance.user
 
             if token_instance.date_created < one_day_ago:
-                if user.is_active == False and user.date_joined == token_instance.date_created:
+                if user.is_active is False and user.date_joined == token_instance.date_created:
                     user.delete()
 
                 token_instance.delete()
@@ -131,7 +131,6 @@ class UserConfirmRegistrationView(View):
                     'message': "Link aktywacyjny wygasł. Prosimy o ponowną rejestrację."
                 }
             else:
-                user = token_instance.user
                 user.is_active = True
                 token_instance.delete()
                 user.save()
@@ -339,8 +338,8 @@ class UserAddView(StaffRequiredMixin, View):
         email = request.POST.get('email')
         password = request.POST.get('password')
         password2 = request.POST.get('password2')
-        is_active = True if request.POST.get('is_active') else False
-        is_staff = True if request.POST.get('is_staff') else False
+        is_active = bool(request.POST.get('is_active'))
+        is_staff = bool(request.POST.get('is_staff'))
 
         # validation
         user_data_errors = validate_user_data(name, surname, email)
@@ -380,8 +379,8 @@ class UserUpdateView(StaffRequiredMixin, View):
         name = request.POST.get('name')
         surname = request.POST.get('surname')
         email = request.POST.get('email')
-        is_active = True if request.POST.get('is_active') else False
-        is_staff = True if request.POST.get('is_staff') else False
+        is_active = bool(request.POST.get('is_active'))
+        is_staff = bool(request.POST.get('is_staff'))
 
         # validation
         ctx = validate_user_data(name, surname, email)

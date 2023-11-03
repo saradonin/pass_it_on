@@ -19,7 +19,7 @@ document.addEventListener("DOMContentLoaded", function () {
             /**
              * Slide buttons
              */
-            this.$buttonsContainer.addEventListener("click", e => {
+            this.$buttonsContainer.addEventListener("click", (e) => {
                 if (e.target.classList.contains("btn")) {
                     this.changeSlide(e);
                 }
@@ -28,8 +28,13 @@ document.addEventListener("DOMContentLoaded", function () {
             /**
              * Pagination buttons
              */
-            this.$el.addEventListener("click", e => {
-                if (e.target.classList.contains("btn") && e.target.parentElement.parentElement.classList.contains("help--slides-pagination")) {
+            this.$el.addEventListener("click", (e) => {
+                if (
+                    e.target.classList.contains("btn") &&
+                    e.target.parentElement.parentElement.classList.contains(
+                        "help--slides-pagination"
+                    )
+                ) {
                     this.changePage(e);
                 }
             });
@@ -40,24 +45,28 @@ document.addEventListener("DOMContentLoaded", function () {
             const $btn = e.target;
 
             // Buttons Active class change
-            [...this.$buttonsContainer.children].forEach(btn => btn.firstElementChild.classList.remove("active"));
+            [...this.$buttonsContainer.children].forEach((btn) =>
+                btn.firstElementChild.classList.remove("active")
+            );
             $btn.classList.add("active");
 
             // Current slide
             this.currentSlide = $btn.parentElement.dataset.id;
 
             // Slides active class change
-            this.$slidesContainers.forEach(el => {
+            this.$slidesContainers.forEach((el) => {
                 el.classList.remove("active");
 
                 if (el.dataset.id === this.currentSlide) {
                     el.classList.add("active");
                 }
                 // Generate pagination for the current slide
-                const itemsCount = el.querySelectorAll(".help--slides-items > li").length;
+                const itemsCount = el.querySelectorAll(
+                    ".help--slides-items > li"
+                ).length;
                 this.generatePagination(itemsCount);
             });
-            this.updatePagination()
+            this.updatePagination();
         }
 
         generatePagination(itemsCount) {
@@ -65,7 +74,9 @@ document.addEventListener("DOMContentLoaded", function () {
 
             // Only 1 page or no pages
             if (totalPages <= 1) {
-                const existingPaginationContainer = document.querySelector(".help--slides-pagination");
+                const existingPaginationContainer = document.querySelector(
+                    ".help--slides-pagination"
+                );
                 if (existingPaginationContainer) {
                     existingPaginationContainer.remove();
                 }
@@ -90,7 +101,6 @@ document.addEventListener("DOMContentLoaded", function () {
 
                 button.appendChild(link);
                 paginationContainer.appendChild(button);
-
             }
             paginationContainer.addEventListener("click", (e) => {
                 if (e.target.tagName === "A") {
@@ -98,12 +108,16 @@ document.addEventListener("DOMContentLoaded", function () {
                     const newPage = parseInt(e.target.dataset.page);
                     this.showItemsForPage(newPage);
 
-                    [...paginationContainer.children].forEach(btn => btn.classList.remove("active"));
+                    [...paginationContainer.children].forEach((btn) =>
+                        btn.classList.remove("active")
+                    );
                     e.target.parentElement.classList.add("active");
                 }
             });
 
-            const existingPaginationContainer = this.$el.querySelector(".help--slides-pagination");
+            const existingPaginationContainer = this.$el.querySelector(
+                ".help--slides-pagination"
+            );
             if (existingPaginationContainer) {
                 existingPaginationContainer.replaceWith(paginationContainer);
             } else {
@@ -114,7 +128,9 @@ document.addEventListener("DOMContentLoaded", function () {
         updatePagination() {
             const activeSlide = this.$el.querySelector(".help--slides.active");
             if (activeSlide) {
-                const itemsCount = activeSlide.querySelectorAll(".help--slides-items > li").length;
+                const itemsCount = activeSlide.querySelectorAll(
+                    ".help--slides-items > li"
+                ).length;
                 this.generatePagination(itemsCount);
             }
         }
@@ -123,8 +139,10 @@ document.addEventListener("DOMContentLoaded", function () {
             /**
              * Hide all
              */
-            const allItems = document.querySelectorAll(".help--slides.active .help--slides-items > li");
-            allItems.forEach(item => item.style.display = "none");
+            const allItems = document.querySelectorAll(
+                ".help--slides.active .help--slides-items > li"
+            );
+            allItems.forEach((item) => (item.style.display = "none"));
 
             const startIndex = (pageNumber - 1) * ITEMS_PER_PAGE;
             const endIndex = Math.min(startIndex + ITEMS_PER_PAGE, allItems.length);
@@ -202,7 +220,7 @@ document.addEventListener("DOMContentLoaded", function () {
         }
 
         addEvents() {
-            this.dropdown.addEventListener("click", e => {
+            this.dropdown.addEventListener("click", (e) => {
                 const target = e.target;
                 this.dropdown.classList.toggle("selecting");
 
@@ -215,7 +233,7 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     }
 
-    document.querySelectorAll(".form-group--dropdown select").forEach(el => {
+    document.querySelectorAll(".form-group--dropdown select").forEach((el) => {
         new FormSelect(el);
     });
 
@@ -228,17 +246,25 @@ document.addEventListener("DOMContentLoaded", function () {
 
         if (target.classList.contains("dropdown")) return false;
 
-        if (tagName === "LI" && target.parentElement.parentElement.classList.contains("dropdown")) {
+        if (
+            tagName === "LI" &&
+            target.parentElement.parentElement.classList.contains("dropdown")
+        ) {
             return false;
         }
 
-        if (tagName === "DIV" && target.parentElement.classList.contains("dropdown")) {
+        if (
+            tagName === "DIV" &&
+            target.parentElement.classList.contains("dropdown")
+        ) {
             return false;
         }
 
-        document.querySelectorAll(".form-group--dropdown .dropdown").forEach(el => {
-            el.classList.remove("selecting");
-        });
+        document
+            .querySelectorAll(".form-group--dropdown .dropdown")
+            .forEach((el) => {
+                el.classList.remove("selecting");
+            });
     });
 
     /**
@@ -254,44 +280,47 @@ document.addEventListener("DOMContentLoaded", function () {
 
             // items for filter
             this.$categoryCheckboxes = form.querySelectorAll(".category-checkbox");
-            this.$allInstitutionsContainers = form.querySelectorAll(".institution-checkbox-container");
+            this.$allInstitutionsContainers = form.querySelectorAll(
+                ".institution-checkbox-container"
+            );
 
             // items from form
 
-            this.$pickupQuantity = form.querySelector('[name="bags"]')
+            this.$pickupQuantity = form.querySelector('[name="bags"]');
             // this.$selectedInstitution = form.querySelector('[name="organization"]:checked')
 
-            this.$pickupStreet = form.querySelector('[name="address"]')
-            this.$pickupCity = form.querySelector('[name="city"]')
-            this.$pickupPostcode = form.querySelector('[name="postcode"]')
-            this.$pickupPhone = form.querySelector('[name="phone"]')
-            this.$pickupDate = form.querySelector('[name="data"]')
-            this.$pickupTime = form.querySelector('[name="time"]')
-            this.$pickupInfo = form.querySelector('[name="more_info"]')
+            this.$pickupStreet = form.querySelector('[name="address"]');
+            this.$pickupCity = form.querySelector('[name="city"]');
+            this.$pickupPostcode = form.querySelector('[name="postcode"]');
+            this.$pickupPhone = form.querySelector('[name="phone"]');
+            this.$pickupDate = form.querySelector('[name="data"]');
+            this.$pickupTime = form.querySelector('[name="time"]');
+            this.$pickupInfo = form.querySelector('[name="more_info"]');
 
             // summary items
-            this.$summaryQuantity = form.querySelector("#summary-bags")
-            this.$summaryCategories = form.querySelector("#summary-categories")
-            this.$summaryInstitution = form.querySelector("#summary-institution")
-            this.$summaryStreet = form.querySelector("#summary-street")
-            this.$summaryCity = form.querySelector("#summary-city")
-            this.$summaryPostcode = form.querySelector("#summary-postcode")
-            this.$summaryPhone = form.querySelector("#summary-phone")
-            this.$summaryDate = form.querySelector("#summary-date")
-            this.$summaryTime = form.querySelector("#summary-time")
-            this.$summaryInfo = form.querySelector("#summary-info")
+            this.$summaryQuantity = form.querySelector("#summary-bags");
+            this.$summaryCategories = form.querySelector("#summary-categories");
+            this.$summaryInstitution = form.querySelector("#summary-institution");
+            this.$summaryStreet = form.querySelector("#summary-street");
+            this.$summaryCity = form.querySelector("#summary-city");
+            this.$summaryPostcode = form.querySelector("#summary-postcode");
+            this.$summaryPhone = form.querySelector("#summary-phone");
+            this.$summaryDate = form.querySelector("#summary-date");
+            this.$summaryTime = form.querySelector("#summary-time");
+            this.$summaryInfo = form.querySelector("#summary-info");
 
+            this.$errorMessage1 = form.querySelector("#error-message-1");
+            this.$errorMessage2 = form.querySelector("#error-message-2");
+            this.$errorMessage3 = form.querySelector("#error-message-3");
+            this.$errorMessage4 = form.querySelector("#error-message-4");
 
-            this.$errorMessage1 = form.querySelector("#error-message-1")
-            this.$errorMessage2 = form.querySelector("#error-message-2")
-            this.$errorMessage3 = form.querySelector("#error-message-3")
-            this.$errorMessage4 = form.querySelector("#error-message-4")
-
-            this.$stepInstructions = form.querySelectorAll(".form--steps-instructions p");
+            this.$stepInstructions = form.querySelectorAll(
+                ".form--steps-instructions p"
+            );
             const $stepForms = form.querySelectorAll("form > div");
             this.slides = [...this.$stepInstructions, ...$stepForms];
 
-            this.isButtonDisabled = false
+            this.isButtonDisabled = false;
 
             this.init();
         }
@@ -309,8 +338,8 @@ document.addEventListener("DOMContentLoaded", function () {
          */
         events() {
             // Next step
-            this.$next.forEach(btn => {
-                btn.addEventListener("click", e => {
+            this.$next.forEach((btn) => {
+                btn.addEventListener("click", (e) => {
                     e.preventDefault();
 
                     if (this.validateStep(this.currentStep)) {
@@ -321,8 +350,8 @@ document.addEventListener("DOMContentLoaded", function () {
             });
 
             // Next step button (validate on mouseover)
-            this.$next.forEach(btn => {
-                btn.addEventListener("mouseover", e => {
+            this.$next.forEach((btn) => {
+                btn.addEventListener("mouseover", (e) => {
                     e.preventDefault();
                     if (!this.isButtonDisabled) {
                         const isValid = this.validateStep(this.currentStep);
@@ -336,8 +365,8 @@ document.addEventListener("DOMContentLoaded", function () {
             });
 
             // Previous step
-            this.$prev.forEach(btn => {
-                btn.addEventListener("click", e => {
+            this.$prev.forEach((btn) => {
+                btn.addEventListener("click", (e) => {
                     e.preventDefault();
                     this.currentStep--;
                     this.updateForm();
@@ -345,8 +374,8 @@ document.addEventListener("DOMContentLoaded", function () {
             });
 
             // Category checkboxes change event
-            this.$categoryCheckboxes.forEach(checkbox => {
-                checkbox.addEventListener('click', () => {
+            this.$categoryCheckboxes.forEach((checkbox) => {
+                checkbox.addEventListener("click", () => {
                     this.updateForm(); // Trigger form update when categories change
                 });
             });
@@ -354,30 +383,27 @@ document.addEventListener("DOMContentLoaded", function () {
             // Form submit
             // this.$form.querySelector("form").addEventListener("submit", e => this.submit(e));
 
-            this.$form.querySelector("form").addEventListener("submit", e => {
+            this.$form.querySelector("form").addEventListener("submit", (e) => {
                 e.preventDefault();
                 this.submit(e);
             });
-
         }
-
 
         /**
          * Update form front-end
          * Show next or previous section etc.
          */
         updateForm() {
-
             // Reset previous error messages
-            this.$errorMessage1.textContent
-                = this.$errorMessage2.textContent
-                = this.$errorMessage3.textContent
-                = this.$errorMessage4.textContent
-                = '';
+            this.$errorMessage1.textContent =
+                this.$errorMessage2.textContent =
+                this.$errorMessage3.textContent =
+                this.$errorMessage4.textContent =
+                "";
 
             this.$step.innerText = this.currentStep;
 
-            this.slides.forEach(slide => {
+            this.slides.forEach((slide) => {
                 slide.classList.remove("active");
 
                 if (slide.dataset.step == this.currentStep) {
@@ -385,49 +411,63 @@ document.addEventListener("DOMContentLoaded", function () {
                 }
             });
 
-            this.$stepInstructions[0].parentElement.parentElement.hidden = this.currentStep >= 6;
+            this.$stepInstructions[0].parentElement.parentElement.hidden =
+                this.currentStep >= 6;
             this.$step.parentElement.hidden = this.currentStep >= 6;
 
             // Filter institutions based on selected categories
             const selectedCategories = Array.from(this.$categoryCheckboxes)
-                .filter(checkbox => checkbox.checked)
-                .map(checkbox => checkbox.value);
+                .filter((checkbox) => checkbox.checked)
+                .map((checkbox) => checkbox.value);
 
-            this.$allInstitutionsContainers.forEach(institutionContainer => {
-                const institutionCategories = institutionContainer.dataset.categoryIds.split(',').map(category => parseInt(category.trim()));
+            this.$allInstitutionsContainers.forEach((institutionContainer) => {
+                const institutionCategories = institutionContainer.dataset.categoryIds
+                    .split(",")
+                    .map((category) => parseInt(category.trim()));
 
-                if (selectedCategories.every(category => institutionCategories.includes(parseInt(category)))) {
-                    institutionContainer.style.display = "block";  // Show the institution
+                if (
+                    selectedCategories.every((category) =>
+                        institutionCategories.includes(parseInt(category))
+                    )
+                ) {
+                    institutionContainer.style.display = "block"; // Show the institution
                 } else {
-                    institutionContainer.style.display = "none";   // Hide the institution
+                    institutionContainer.style.display = "none"; // Hide the institution
                 }
             });
 
             // Summary display
             const selectedCategoriesNames = Array.from(this.$categoryCheckboxes)
-                .filter(checkbox => checkbox.checked)
-                .map(checkbox => checkbox.dataset.categoryName);
+                .filter((checkbox) => checkbox.checked)
+                .map((checkbox) => checkbox.dataset.categoryName);
 
-            this.$summaryQuantity.innerHTML = this.$pickupQuantity.value + " " + "worki" + "&nbsp;" // space
-            const selectedInstitution = form.querySelector('[name="organization"]:checked')
+            this.$summaryQuantity.innerHTML =
+                this.$pickupQuantity.value + " " + "worki" + "&nbsp;"; // space
+            const selectedInstitution = form.querySelector(
+                '[name="organization"]:checked'
+            );
             if (selectedInstitution) {
-                this.$summaryInstitution.textContent = selectedInstitution.value
+                this.$summaryInstitution.textContent = selectedInstitution.value;
             }
-            this.$summaryCategories.textContent = ("(" + selectedCategoriesNames + ")").replace(",", ", ")
-            this.$summaryStreet.textContent = this.$pickupStreet.value
-            this.$summaryCity.textContent = this.$pickupCity.value
-            this.$summaryPostcode.textContent = this.$pickupPostcode.value
-            this.$summaryPhone.textContent = this.$pickupPhone.value
-            this.$summaryDate.textContent = this.$pickupDate.value
-            this.$summaryTime.textContent = "godz. " + this.$pickupTime.value
+            this.$summaryCategories.textContent = (
+                "(" +
+                selectedCategoriesNames +
+                ")"
+            ).replace(",", ", ");
+            this.$summaryStreet.textContent = this.$pickupStreet.value;
+            this.$summaryCity.textContent = this.$pickupCity.value;
+            this.$summaryPostcode.textContent = this.$pickupPostcode.value;
+            this.$summaryPhone.textContent = this.$pickupPhone.value;
+            this.$summaryDate.textContent = this.$pickupDate.value;
+            this.$summaryTime.textContent = "godz. " + this.$pickupTime.value;
             if (this.$pickupInfo.value === "") {
-                this.$summaryInfo.textContent = "Brak uwag"
+                this.$summaryInfo.textContent = "Brak uwag";
             } else {
-                this.$summaryInfo.textContent = this.$pickupInfo.value
+                this.$summaryInfo.textContent = this.$pickupInfo.value;
             }
             // Dynamically set the 'min' attribute for the date input
 
-            const today = new Date().toISOString().split('T')[0];
+            const today = new Date().toISOString().split("T")[0];
             this.$pickupDate.setAttribute("min", today);
         }
 
@@ -437,23 +477,28 @@ document.addEventListener("DOMContentLoaded", function () {
         validateStep(step) {
             switch (step) {
                 case 1:
-                    const selectedCategories = Array.from(this.$categoryCheckboxes).some(checkbox => checkbox.checked);
+                    const selectedCategories = Array.from(this.$categoryCheckboxes).some(
+                        (checkbox) => checkbox.checked
+                    );
                     if (!selectedCategories) {
-                        this.$errorMessage1.textContent = 'Zaznacz co najmniej jedną kategorię';
+                        this.$errorMessage1.textContent =
+                            "Zaznacz co najmniej jedną kategorię";
                         return false;
                     }
                     return true;
                 case 2:
                     const numberOfBags = this.$pickupQuantity.value;
                     if (!numberOfBags || numberOfBags < 1) {
-                        this.$errorMessage2.textContent = 'Podaj liczbę worków';
+                        this.$errorMessage2.textContent = "Podaj liczbę worków";
                         return false;
                     }
                     return true;
                 case 3:
-                    const selectedInstitution = form.querySelector('[name="organization"]:checked')
+                    const selectedInstitution = form.querySelector(
+                        '[name="organization"]:checked'
+                    );
                     if (!selectedInstitution) {
-                        this.$errorMessage3.textContent = 'Wybierz instytucję';
+                        this.$errorMessage3.textContent = "Wybierz instytucję";
                         return false;
                     }
                     return true;
@@ -470,9 +515,11 @@ document.addEventListener("DOMContentLoaded", function () {
                         this.$errorMessage4.textContent = "Podaj poprawny kod pocztowy";
                         return false;
                     }
-                    if (this.$pickupPhone.value === "" ||
+                    if (
+                        this.$pickupPhone.value === "" ||
                         this.$pickupPhone.value.length > 15 ||
-                        this.$pickupPhone.value.length < 9) {
+                        this.$pickupPhone.value.length < 9
+                    ) {
                         this.$errorMessage4.textContent = "Podaj numer telefonu";
                         return false;
                     }

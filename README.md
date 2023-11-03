@@ -1,10 +1,6 @@
 # Pass it on 
 ## Donation Management App
 
-***
-## *work in progress*
-***
-
 Pass it on project is a donation management system that allows users to make donations to various institutions, 
 including foundations, non-governmental organizations, and local collections. 
 It helps users connect with the causes they care about and facilitate the process of giving.
@@ -24,7 +20,5 @@ To set up and run this project locally, follow these steps:
 ## Layout
 Page layout prototype was prepared by Magda - a graduate of CodesLab UX course.
 
-## License
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
 
