@@ -19,8 +19,10 @@ class IndexView(View):
                 institutions_supported.append(donation.institution.id)
 
         foundations = Institution.objects.filter(type="1").order_by("name")
-        non_gov_organizations = Institution.objects.filter(type="2").order_by("name")
-        local_collections = Institution.objects.filter(type="3").order_by("name")
+        non_gov_organizations = Institution.objects.filter(
+            type="2").order_by("name")
+        local_collections = Institution.objects.filter(
+            type="3").order_by("name")
 
         ctx = {
             "institutions_supported": len(institutions_supported),
@@ -47,9 +49,9 @@ class DonationAddView(LoginRequiredMixin, View):
 
     def post(self, request):
         user = request.user
-        categories = request.POST.getlist('categories')  # Get selected category IDs
-        quantity = request.POST.get('bags')  # Get bags quantity
-        institution_name = request.POST.get('organization')  # Get selected institution name
+        categories = request.POST.getlist('categories')
+        quantity = request.POST.get('bags')
+        institution_name = request.POST.get('organization')
         address = request.POST.get('address')
         city = request.POST.get('city')
         postcode = request.POST.get('postcode')
@@ -62,7 +64,6 @@ class DonationAddView(LoginRequiredMixin, View):
         institution = Institution.objects.get(name=institution_name)
 
         if quantity and categories and institution and address and phone_number and city and postcode and pick_up_date and pick_up_time:
-            # Create a Donation object with the form data
             donation = Donation.objects.create(
                 quantity=quantity,
                 institution=institution,
@@ -123,6 +124,3 @@ class DonationDetailsView(LoginRequiredMixin, View):
             'donation': Donation.objects.get(id=donation_id)
         }
         return render(request, 'donation_details.html', ctx)
-
-
-

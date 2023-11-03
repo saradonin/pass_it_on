@@ -136,9 +136,7 @@ document.addEventListener("DOMContentLoaded", function () {
         }
 
         showItemsForPage(pageNumber) {
-            /**
-             * Hide all
-             */
+            // Hide all
             const allItems = document.querySelectorAll(
                 ".help--slides.active .help--slides-items > li"
             );
@@ -146,9 +144,8 @@ document.addEventListener("DOMContentLoaded", function () {
 
             const startIndex = (pageNumber - 1) * ITEMS_PER_PAGE;
             const endIndex = Math.min(startIndex + ITEMS_PER_PAGE, allItems.length);
-            /**
-             * Show current items
-             */
+
+            // Show current items
             for (let i = startIndex; i < endIndex; i++) {
                 allItems[i].style.display = "flex";
             }
@@ -161,7 +158,7 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     }
 
-    const ITEMS_PER_PAGE = 5; // Number of items per page
+    const ITEMS_PER_PAGE = 5;
     const helpSection = document.querySelector(".help");
     if (helpSection !== null) {
         new Help(helpSection);
@@ -503,31 +500,31 @@ document.addEventListener("DOMContentLoaded", function () {
                     }
                     return true;
                 case 4:
-                    if (this.$pickupStreet.value === "") {
+                    if (!this.$pickupStreet.value) {
                         this.$errorMessage4.textContent = "Podaj nazwę ulicy";
                         return false;
                     }
-                    if (this.$pickupCity.value === "") {
+                    if (!this.$pickupCity.value) {
                         this.$errorMessage4.textContent = "Podaj nazwę miasta";
                         return false;
                     }
-                    if (this.$pickupPostcode.value === "") {
-                        this.$errorMessage4.textContent = "Podaj poprawny kod pocztowy";
+                    var zipCodePattern = /^\d{2}-\d{3}$|^\d{5}$/;
+                    if (!zipCodePattern.test(this.$pickupPostcode.value)) {
+                        this.$errorMessage4.textContent =
+                            "Podaj poprawny kod pocztowy (np. 11-111 lub 11111)";
                         return false;
                     }
-                    if (
-                        this.$pickupPhone.value === "" ||
-                        this.$pickupPhone.value.length > 15 ||
-                        this.$pickupPhone.value.length < 9
-                    ) {
-                        this.$errorMessage4.textContent = "Podaj numer telefonu";
+                    var phonePattern = /^\+?\d{9,15}$/;
+                    if (!phonePattern.test(this.$pickupPhone.value)) {
+                        this.$errorMessage4.textContent =
+                            "Podaj poprawny numer telefonu (9-15 cyfr, opcjonalny '+')";
                         return false;
                     }
-                    if (this.$pickupDate.value === "") {
+                    if (!this.$pickupDate.value) {
                         this.$errorMessage4.textContent = "Podaj datę odbioru";
                         return false;
                     }
-                    if (this.$pickupTime.value === "") {
+                    if (!this.$pickupTime.value) {
                         this.$errorMessage4.textContent = "Podaj godzinę";
                         return false;
                     }

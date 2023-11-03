@@ -48,7 +48,7 @@ class Donation(models.Model):
     """
     phone_regex = RegexValidator(regex=r'^\+?1?\d{9,15}$',
                                  message="Numer telefonu musi zawierać od 9 do 15 cyfr.")
-    zipcode_regex = RegexValidator(regex=r'^(\d{2}(?:[-]\d{3})|\d{5})$',
+    zipcode_regex = RegexValidator(regex=r'^\d{2}-\d{3}$|^\d{5}$',
                                  message="Kod pocztowy musi być podany w formacie 12345 lub 12-345")
 
     quantity = models.PositiveIntegerField()
