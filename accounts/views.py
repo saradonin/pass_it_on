@@ -14,7 +14,7 @@ from django.views import View
 from django.views.generic import DeleteView, CreateView, UpdateView, ListView
 
 from accounts.models import User, Token
-from accounts.validators import validate_password, validate_user_data, validate_email_unique
+from accounts.validators import validate_last_admin, validate_password, validate_user_data, validate_email_unique
 from donations.models import Donation, Institution
 
 
@@ -221,15 +221,15 @@ class UserPasswordResetView(View):
         try:
             token_instance = Token.objects.get(token=token)
             one_day_ago = timezone.now() - timedelta(days=1)
-            
+
             if token_instance.date_created < one_day_ago:
                 ctx = {
-                'message': "Link do zmiany hasła wygasł."
+                    'message': "Link do zmiany hasła wygasł."
                 }
                 token_instance.delete()
                 return render(request, 'user_register_message.html', ctx)
             return render(request, 'user_password_reset.html')
-   
+
         except Token.DoesNotExist:
             ctx = {
                 'message': "Link do zmiany hasła jest nieprawidłowy lub został już wykorzystany"
@@ -398,14 +398,25 @@ class UserUpdateView(StaffRequiredMixin, View):
         return render(request, 'user_update_form.html', ctx)
 
 
-class UserDeleteView(StaffRequiredMixin, DeleteView):
+class UserDeleteView(StaffRequiredMixin, View):
     """
     Display confirmation and handle delete user
     """
-    model = User
-    template_name = 'user_confirm_delete.html'
-    pk_url_kwarg = 'user_id'
-    success_url = reverse_lazy('user-list')
+
+    def get(self, request, user_id):
+        user = User.objects.get(id=user_id)
+
+        ctx = validate_last_admin(request, user)
+        ctx["user"] = user
+        return render(request, 'user_confirm_delete.html', ctx)
+
+    def post(self, request, user_id):
+        user = User.objects.get(id=user_id)
+        ctx = validate_last_admin(request, user)
+
+        if not ctx:
+            user.delete()
+            return redirect('user-list')
 
 
 class InstitutionListView(StaffRequiredMixin, ListView):

@@ -45,8 +45,28 @@ def validate_user_data(name, surname, email):
 
 
 def validate_email_unique(email):
+    """
+    Validates email availability
+    """
     errors = {}
     if User.objects.filter(email=email):
         errors["email_msg"] = "Podany adres email jest zajety"
+
+    return errors
+
+
+def validate_last_admin(request, user):
+    """
+    Validates if user is the last superuser
+    """
+    errors = {}
+    current_user = request.user
+    admin_count = User.objects.filter(is_staff=True).count()
+
+    if user.is_staff and admin_count == 1:
+        errors["message"] = "Usunięcie ostatniego administratora jest niemożliwe."
+
+    if user == current_user:
+        errors["message"] = "Usunięcie samego siebie jest niemożliwe."
 
     return errors

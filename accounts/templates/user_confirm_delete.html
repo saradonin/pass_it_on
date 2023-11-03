@@ -1,24 +1,32 @@
 {% extends '__base__.html' %}
 {% block content %}
 
-    <header>
-        {% include 'navbar.html' %}
-        {% block navbar %}{% endblock navbar %}
-    </header>
+<header>
+    {% include 'navbar.html' %}
+    {% block navbar %}{% endblock navbar %}
+</header>
 
-    <section class="admin-menu">
-        <h2>Czy na pewno chcesz usunąć użytkownika:
-            <br>{{ user.first_name }} {{ user.last_name }} ({{ user.username }})</h2>
-    </section>
+<section class="admin-menu">
+    {% if message %}
+    <h2>{{ message }}</h2>
+    {% else %}
+    <h2>Czy na pewno chcesz usunąć użytkownika:
+        <br><br>{{ user.first_name }} {{ user.last_name }} ({{ user.username }})
+    </h2>
+    {% endif %}
+</section>
 
-    <section class="login-page">
-        <form method="POST">
-            {% csrf_token %}
-            <div class="form-group form-group--buttons">
-                <a href="{% url 'user-list' %}" class="btn btn--admin">Anuluj</a>
-                <input type="submit" class="btn btn--admin" value="Usuń">
-            </div>
-        </form>
-    </section>
+
+<section class="login-page">
+    <form method="POST">
+        {% csrf_token %}
+        <div class="form-group form-group--buttons">
+            <a href="{% url 'user-list' %}" class="btn btn--admin btn--without-border">Powrót</a>
+            {% if user != current_user %}
+            <input type="submit" class="btn btn--admin" value="Usuń">
+            {% endif %}
+        </div>
+    </form>
+</section>
 
 {% endblock content %}
