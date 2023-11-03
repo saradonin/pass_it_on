@@ -46,7 +46,7 @@ class UserLoginView(View):
             ctx = {
                 'message': "Twoje konto nie zostało aktywowane. Sprawdź email."
             }
-            return render(request, 'user_register_message.html', ctx)
+            return render(request, 'message.html', ctx)
         else:
             login(request, user)
             return redirect('index')
@@ -106,7 +106,7 @@ class UserRegisterView(View):
             ctx = {
                 'message': "Dziękujemy za rejestrację konta. Na wskazany adres email został wysłany link aktywacyjny."
             }
-            return render(request, 'user_register_message.html', ctx)
+            return render(request, 'message.html', ctx)
 
         return render(request, 'user_register.html', ctx)
 
@@ -142,7 +142,7 @@ class UserConfirmRegistrationView(View):
             ctx = {
                 'message': "Link aktywacyjny jest nieprawidłowy lub został już wykorzystany"
             }
-        return render(request, 'user_register_message.html', ctx)
+        return render(request, 'message.html', ctx)
 
 
 class UserSettingsView(LoginRequiredMixin, View):
@@ -209,7 +209,7 @@ class UserPasswordSendEmailView(View):
             ctx = {
                 'message': "Na wskazany adres email wysłaliśmy link do zmiany hasła."
             }
-            return render(request, 'user_register_message.html', ctx)
+            return render(request, 'message.html', ctx)
 
 
 class UserPasswordResetView(View):
@@ -227,14 +227,14 @@ class UserPasswordResetView(View):
                     'message': "Link do zmiany hasła wygasł."
                 }
                 token_instance.delete()
-                return render(request, 'user_register_message.html', ctx)
+                return render(request, 'message.html', ctx)
             return render(request, 'user_password_reset.html')
 
         except Token.DoesNotExist:
             ctx = {
                 'message': "Link do zmiany hasła jest nieprawidłowy lub został już wykorzystany"
             }
-            return render(request, 'user_register_message.html', ctx)
+            return render(request, 'message.html', ctx)
 
     def post(self, request, token):
         token_instance = Token.objects.get(token=token)
@@ -485,4 +485,4 @@ class ContactFormView(View):
             ctx = {
                 'message': "Twoja wiadomość została wysłana. Dziękujemy za kontakt."
             }
-            return render(request, 'user_register_message.html', ctx)
+            return render(request, 'message.html', ctx)
