@@ -1,20 +1,20 @@
 {% extends '__base__.html' %}
 {% block content %}
-    <!-- //--------------------------- header -------------------------// -->
-    <header>
-        {% include 'navbar.html' %}
-        {% block navbar %}{% endblock navbar %}
-    </header>
-    <!-- //--------------------------- header end ---------------------// -->
-    <header>
-        {% include 'navbar_admin.html' %}
-        {% block admin %}{% endblock admin %}
-    </header>
+<!-- //--------------------------- header -------------------------// -->
+<header>
+    {% include 'navbar.html' %}
+    {% block navbar %}{% endblock navbar %}
+</header>
+<!-- //--------------------------- header end ---------------------// -->
+<header>
+    {% include 'navbar_admin.html' %}
+    {% block admin %}{% endblock admin %}
+</header>
 
-    <section>
-        <div class="table-container">
-            <table class="table">
-                <thead>
+<section>
+    <div class="table-container">
+        <table class="table">
+            <thead>
                 <tr>
                     <th>Id</th>
                     <th>Username</th>
@@ -24,32 +24,32 @@
                     <th>Administrator</th>
                     <th colspan="2"><a href="{% url 'user-add' %}" class="btn">Dodaj</a></th>
                 </tr>
-                </thead>
-                <tbody>
+            </thead>
+            <tbody>
                 {% for user in object_list %}
-                    <tr>
-                        <td>{{ user.id }}</td>
-                        <td>{{ user.username }}</td>
-                        <td>{{ user.first_name }}</td>
-                        <td>{{ user.last_name }}</td>
-                        <td>{{ user.email }}</td>
-                        <td>{{ user.is_staff|yesno:"Tak,Nie" }}</td>
-                        <td><a href="{% url 'user-update' user.id %}" class="btn">Edytuj</a></td>
-                        {% if user == current_user %}
-                            <td>
-                                <button disabled href="" class="btn">Usuń</button>
-                            </td>
-                        {% else %}
-                            <td><a href="{% url 'user-delete' user.id %}" class="btn">Usuń</a></td>
-                        {% endif %}
-                    </tr>
+                <tr>
+                    <td>{{ user.id }}</td>
+                    <td>{{ user.username }}</td>
+                    <td>{{ user.first_name }}</td>
+                    <td>{{ user.last_name }}</td>
+                    <td>{{ user.email }}</td>
+                    <td>{{ user.is_staff|yesno:"Tak,Nie" }}</td>
+                    <td><a href="{% url 'user-update' user.id %}" class="btn">Edytuj</a></td>
+                    {% if user == current_user %}
+                    <td>
+                        <button disabled href="" class="btn">Usuń</button>
+                    </td>
+                    {% else %}
+                    <td><a href="{% url 'user-delete' user.id %}" class="btn">Usuń</a></td>
+                    {% endif %}
+                </tr>
                 {% endfor %}
-                </tbody>
+            </tbody>
 
-            </table>
-        </div>
+        </table>
+    </div>
 
-    </section>
+</section>
 
 
 

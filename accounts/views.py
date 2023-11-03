@@ -14,7 +14,7 @@ from django.views import View
 from django.views.generic import DeleteView, CreateView, UpdateView, ListView
 
 from accounts.models import User, Token
-from accounts.validators import validate_password, validate_user_data, validate_email_unique
+from accounts.validators import validate_last_admin, validate_password, validate_user_data, validate_email_unique
 from donations.models import Donation, Institution
 
 
@@ -46,7 +46,7 @@ class UserLoginView(View):
             ctx = {
                 'message': "Twoje konto nie zostało aktywowane. Sprawdź email."
             }
-            return render(request, 'user_register_message.html', ctx)
+            return render(request, 'message.html', ctx)
         else:
             login(request, user)
             return redirect('index')
@@ -106,7 +106,7 @@ class UserRegisterView(View):
             ctx = {
                 'message': "Dziękujemy za rejestrację konta. Na wskazany adres email został wysłany link aktywacyjny."
             }
-            return render(request, 'user_register_message.html', ctx)
+            return render(request, 'message.html', ctx)
 
         return render(request, 'user_register.html', ctx)
 
@@ -142,7 +142,7 @@ class UserConfirmRegistrationView(View):
             ctx = {
                 'message': "Link aktywacyjny jest nieprawidłowy lub został już wykorzystany"
             }
-        return render(request, 'user_register_message.html', ctx)
+        return render(request, 'message.html', ctx)
 
 
 class UserSettingsView(LoginRequiredMixin, View):
@@ -209,7 +209,7 @@ class UserPasswordSendEmailView(View):
             ctx = {
                 'message': "Na wskazany adres email wysłaliśmy link do zmiany hasła."
             }
-            return render(request, 'user_register_message.html', ctx)
+            return render(request, 'message.html', ctx)
 
 
 class UserPasswordResetView(View):
@@ -221,20 +221,20 @@ class UserPasswordResetView(View):
         try:
             token_instance = Token.objects.get(token=token)
             one_day_ago = timezone.now() - timedelta(days=1)
-            
+
             if token_instance.date_created < one_day_ago:
                 ctx = {
-                'message': "Link do zmiany hasła wygasł."
+                    'message': "Link do zmiany hasła wygasł."
                 }
                 token_instance.delete()
-                return render(request, 'user_register_message.html', ctx)
+                return render(request, 'message.html', ctx)
             return render(request, 'user_password_reset.html')
-   
+
         except Token.DoesNotExist:
             ctx = {
                 'message': "Link do zmiany hasła jest nieprawidłowy lub został już wykorzystany"
             }
-            return render(request, 'user_register_message.html', ctx)
+            return render(request, 'message.html', ctx)
 
     def post(self, request, token):
         token_instance = Token.objects.get(token=token)
@@ -398,14 +398,25 @@ class UserUpdateView(StaffRequiredMixin, View):
         return render(request, 'user_update_form.html', ctx)
 
 
-class UserDeleteView(StaffRequiredMixin, DeleteView):
+class UserDeleteView(StaffRequiredMixin, View):
     """
     Display confirmation and handle delete user
     """
-    model = User
-    template_name = 'user_confirm_delete.html'
-    pk_url_kwarg = 'user_id'
-    success_url = reverse_lazy('user-list')
+
+    def get(self, request, user_id):
+        user = User.objects.get(id=user_id)
+
+        ctx = validate_last_admin(request, user)
+        ctx["user"] = user
+        return render(request, 'user_confirm_delete.html', ctx)
+
+    def post(self, request, user_id):
+        user = User.objects.get(id=user_id)
+        ctx = validate_last_admin(request, user)
+
+        if not ctx:
+            user.delete()
+            return redirect('user-list')
 
 
 class InstitutionListView(StaffRequiredMixin, ListView):
@@ -450,3 +461,28 @@ class InstitutionDeleteView(StaffRequiredMixin, DeleteView):
     template_name = 'institution_confirm_delete.html'
     pk_url_kwarg = 'institution_id'
     success_url = reverse_lazy('institution-list')
+
+
+class ContactFormView(View):
+    """
+    View for handling contact form.
+    """
+
+    def post(self, request):
+        name = request.POST.get('name')
+        surname = request.POST.get('surname')
+        message = request.POST.get('message')
+
+        if name and surname and message:
+            email_subject = f"Wiadomość od {name} {surname}"
+            email_message = f"{name} {surname} przesłał wiadomość o następującej treści: \n {message}"
+            email_list = [
+                user.email for user in User.objects.filter(is_staff=True)]
+
+            send_mail(email_subject, email_message,
+                      settings.EMAIL_HOST_USER, email_list)
+
+            ctx = {
+                'message': "Twoja wiadomość została wysłana. Dziękujemy za kontakt."
+            }
+            return render(request, 'message.html', ctx)

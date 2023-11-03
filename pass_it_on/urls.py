@@ -17,7 +17,7 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 
-from accounts.views import UserConfirmRegistrationView, UserLoginView, UserLogoutView, UserPasswordResetView, UserPasswordSendEmailView, UserRegisterView, AdminMenuView, UserListView, UserAddView, \
+from accounts.views import ContactFormView, UserConfirmRegistrationView, UserLoginView, UserLogoutView, UserPasswordResetView, UserPasswordSendEmailView, UserRegisterView, AdminMenuView, UserListView, UserAddView, \
     UserUpdateView, UserDeleteView, UserProfileView, UserSettingsView, UserPasswordChangeView, InstitutionListView, \
     InstitutionAddView, InstitutionUpdateView, InstitutionDeleteView
 from donations.views import IndexView, DonationAddView, DonationConfirmView, DonationConfirmReceivedView, \
@@ -40,6 +40,8 @@ urlpatterns = [
     path('donation/confirmed/', DonationConfirmView.as_view(), name="donation-confirmation"),
     path('donation/received/<int:donation_id>', DonationConfirmReceivedView.as_view(), name="donation-confirm-received"),
     path('donation/details/<int:donation_id>', DonationDetailsView.as_view(), name="donation-details"),
+    
+    path('contact/', ContactFormView.as_view(), name="contact-form"),
 
     path('admin-menu/', AdminMenuView.as_view(), name="admin-menu"),
 
