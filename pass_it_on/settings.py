@@ -20,7 +20,8 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-bvd%ev2bb@3z8u6jm8s8kqphsspjb)&a8+i6!kv2703f!skgi3'
+SECRET_KEY = os.environ['SECRET_KEY']
+
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -71,24 +72,26 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'pass_it_on.wsgi.application'
 
-# Databases
-try:
-    from pass_it_on._local_settings import DATABASES
-except ModuleNotFoundError:
-    print("Databases settings not found!")
-    exit(0)
+# Database
+# https://docs.djangoproject.com/en/4.2/ref/settings/#databases
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': os.environ.get('POSTGRES_NAME'),
+        'USER': os.environ.get('POSTGRES_USER'),
+        'PASSWORD': os.environ.get('POSTGRES_PASSWORD'),
+        'HOST': 'db',
+        'PORT': '5432',
+    }
+}
+
     
 # Email settings
-try:
-    from pass_it_on._local_settings import EMAIL_HOST, EMAIL_HOST_USER, EMAIL_HOST_PASSWORD, EMAIL_PORT
-    EMAIL_USE_TLS = True
-    EMAIL_HOST = EMAIL_HOST
-    EMAIL_HOST_USER = EMAIL_HOST_USER
-    EMAIL_HOST_PASSWORD = EMAIL_HOST_PASSWORD
-    EMAIL_PORT = EMAIL_PORT
-except ModuleNotFoundError:
-    print("Email settings not found!")
-    exit(0)
+EMAIL_USE_TLS = True
+EMAIL_HOST = os.environ.get('MAIL_HOST')
+EMAIL_HOST_USER = os.environ.get('EMAIL_HOST_USER')
+EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_HOST_PASSWORD')
+EMAIL_PORT = int(os.environ.get('EMAIL_PORT'))
     
 BASE_URL = "localhost:8000"
     
