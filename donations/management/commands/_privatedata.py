@@ -31,8 +31,7 @@ def create_institutions():
 
 
 def create_users():
-    User.objects.create_superuser(username='admin', email='admin@oddam.org', password='admin')
+    User.objects.create_superuser(username='admin@oddam.org', email='admin@oddam.org', password='admin')
     for i in range(2):
-        username = f"user{i+1}"
-        email = f"user{i+1}@oddam.org"
+        username = email = f"user{i+1}@oddam.org"
         User.objects.create_user(username=username, email=email, password='password123')
