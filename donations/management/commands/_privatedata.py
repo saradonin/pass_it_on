@@ -13,7 +13,7 @@ def create_categories():
 
 
 def create_institutions():
-    for i in range(2):
+    for i in range(25):
         type = random.randint(1, 3)
         if type == 1:
             name = f"Fundacja {i+1}"
