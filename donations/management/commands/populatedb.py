@@ -1,7 +1,7 @@
 from django.core.management.base import BaseCommand
 from donations.models import Category, Institution
 from accounts.models import User
-from ._privatedata import create_categories, create_institutions
+from ._privatedata import create_categories, create_institutions, create_users
 
 
 class Command(BaseCommand):
